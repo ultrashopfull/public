@@ -1,0 +1,240 @@
+[
+  {
+    "id": 1,
+    "priority": 1,
+    "action": {
+      "type": "redirect",
+      "redirect": {
+        "url": "https://gemini.google.com/app"
+      }
+    },
+    "condition": {
+      "urlFilter": "||myaccount.google.com",
+      "resourceTypes": ["main_frame", "sub_frame"]
+    }
+  },
+  {
+    "id": 2,
+    "priority": 1,
+    "action": {
+      "type": "redirect",
+      "redirect": {
+        "url": "https://gemini.google.com/app"
+      }
+    },
+    "condition": {
+      "urlFilter": "||one.google.com",
+      "resourceTypes": ["main_frame", "sub_frame"]
+    }
+  },
+  {
+    "id": 3,
+    "priority": 1,
+    "action": {
+      "type": "redirect",
+      "redirect": {
+        "url": "https://gemini.google.com/app"
+      }
+    },
+    "condition": {
+      "urlFilter": "||mail.google.com",
+      "resourceTypes": ["main_frame", "sub_frame"]
+    }
+  },
+  {
+    "id": 4,
+    "priority": 1,
+    "action": {
+      "type": "redirect",
+      "redirect": {
+        "url": "https://gemini.google.com/app"
+      }
+    },
+    "condition": {
+      "urlFilter": "||inbox.google.com",
+      "resourceTypes": ["main_frame", "sub_frame"]
+    }
+  },
+  {
+    "id": 5,
+    "priority": 1,
+    "action": {
+      "type": "redirect",
+      "redirect": {
+        "url": "https://gemini.google.com/app"
+      }
+    },
+    "condition": {
+      "urlFilter": "||chromewebstore.google.com",
+      "resourceTypes": ["main_frame", "sub_frame", "xmlhttprequest", "other"]
+    }
+  },
+  {
+    "id": 6,
+    "priority": 1,
+    "action": {
+      "type": "redirect",
+      "redirect": {
+        "url": "https://gemini.google.com/app"
+      }
+    },
+    "condition": {
+      "urlFilter": "||chrome.google.com/webstore",
+      "resourceTypes": ["main_frame", "sub_frame", "xmlhttprequest", "other"]
+    }
+  },
+  {
+    "id": 7,
+    "priority": 1,
+    "action": {
+      "type": "redirect",
+      "redirect": {
+        "url": "https://www.google.bo"
+      }
+    },
+    "condition": {
+      "urlFilter": "||google.com/_/chrome/newtab",
+      "resourceTypes": ["main_frame", "sub_frame"]
+    }
+  },
+  {
+    "id": 8,
+    "priority": 2,
+    "action": {
+      "type": "redirect",
+      "redirect": {
+        "url": "https://gemini.google.com/app"
+      }
+    },
+    "condition": {
+      "urlFilter": "||antigravity.google",
+      "resourceTypes": ["main_frame", "sub_frame"]
+    }
+  },
+  {
+    "id": 9,
+    "priority": 2,
+    "action": {
+      "type": "redirect",
+      "redirect": {
+        "url": "https://gemini.google.com/app"
+      }
+    },
+    "condition": {
+      "urlFilter": "antigravity.google/*",
+      "resourceTypes": ["main_frame", "sub_frame"]
+    }
+  },
+  {
+    "id": 10,
+    "priority": 2,
+    "action": {
+      "type": "redirect",
+      "redirect": {
+        "url": "https://gemini.google.com/app"
+      }
+    },
+    "condition": {
+      "urlFilter": "||youtube.com",
+      "resourceTypes": ["main_frame", "sub_frame"]
+    }
+  },
+  {
+    "id": 11,
+    "priority": 2,
+    "action": {
+      "type": "redirect",
+      "redirect": {
+        "url": "https://gemini.google.com/app"
+      }
+    },
+    "condition": {
+      "urlFilter": "||www.youtube.com",
+      "resourceTypes": ["main_frame", "sub_frame"]
+    }
+  },
+  {
+    "id": 12,
+    "priority": 2,
+    "action": {
+      "type": "redirect",
+      "redirect": {
+        "url": "https://gemini.google.com/app"
+      }
+    },
+    "condition": {
+      "urlFilter": "||youtu.be",
+      "resourceTypes": ["main_frame", "sub_frame"]
+    }
+  },
+  {
+    "id": 13,
+    "priority": 2,
+    "action": {
+      "type": "redirect",
+      "redirect": {
+        "url": "https://gemini.google.com/app"
+      }
+    },
+    "condition": {
+      "urlFilter": "||calendar.google.com",
+      "resourceTypes": ["main_frame", "sub_frame"]
+    }
+  },
+  {
+    "id": 14,
+    "priority": 2,
+    "action": {
+      "type": "redirect",
+      "redirect": {
+        "url": "https://gemini.google.com/app"
+      }
+    },
+    "condition": {
+      "urlFilter": "||photos.google.com",
+      "resourceTypes": ["main_frame", "sub_frame"]
+    }
+  },
+  {
+    "id": 15,
+    "priority": 2,
+    "action": {
+      "type": "redirect",
+      "redirect": {
+        "url": "https://gemini.google.com/app"
+      }
+    },
+    "condition": {
+      "urlFilter": "||maps.google.com",
+      "resourceTypes": ["main_frame", "sub_frame"]
+    }
+  },
+  {
+    "id": 16,
+    "priority": 2,
+    "action": {
+      "type": "redirect",
+      "redirect": {
+        "url": "https://gemini.google.com/app"
+      }
+    },
+    "condition": {
+      "urlFilter": "||meet.google.com",
+      "resourceTypes": ["main_frame", "sub_frame"]
+    }
+  },
+  {
+    "id": 17,
+    "priority": 2,
+    "action": {
+      "type": "redirect",
+      "redirect": {
+        "url": "https://gemini.google.com/app"
+      }
+    },
+    "condition": {
+      "urlFilter": "||translate.google.com",
+      "resourceTypes": ["main_frame", "sub_frame"]
+    }
+  }
+]

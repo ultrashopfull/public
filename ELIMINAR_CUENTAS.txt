@@ -1,0 +1,12 @@
+ELIMINAR CUENTAS — LICENCIAS
+
+Cada tarjeta de Licencias tiene Eliminar cuenta. El modal identifica la cuenta y pide confirmación.
+Las cuentas vinculadas a suscripciones o migraciones pendientes no se pueden borrar hasta resolver esas relaciones. Nunca se eliminan clientes en cascada desde esta acción.
+
+ACTIVACIÓN EN SUPABASE
+1. En el SQL Editor del proyecto de este panel, ejecutar supabase/setup/sincronizacion_panel.sql de este ZIP. Es la actualización de la función ultrashop_panel_action con el comando master.delete. Repetir el script no borra datos ni reinicia el estado del panel.
+2. Publicar los archivos del panel actualizados, incluido index.html.
+3. Actualizar el panel para que detecte la sincronización completa.
+Si todavía usa la API antigua, seguir además ACTIVAR_SINCRONIZACION.txt para actualizar la función admin. No hay un borrado local de respaldo cuando Supabase está conectado.
+
+Estado de entrega: preparado y probado localmente; no aplicado al proyecto remoto por falta de permisos de acceso. No se borró ninguna cuenta real ni se modificaron contraseñas.

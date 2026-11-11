@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Flow</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <!-- HEADER (MISMA LÍNEA GRÁFICA QUE FLOW ASISTENTE) -->
+    <div class="header">
+      <div class="header-icon">
+        <img src="google.png" alt="Google" width="22" height="22" />
+      </div>
+      <div class="header-info">
+        <h2>Flow</h2>
+        <span class="cloud-status" id="cloudStatusText">
+          <span class="status-dot"></span> Conectado a la Nube
+        </span>
+      </div>
+    </div>
+
+    <!-- ADVERTENCIA DE SEGURIDAD POR DESACTIVACIÓN PREVIA -->
+    <div id="popupWarningBanner" class="warning-banner" style="display: none;">
+      <div class="warning-icon">🛡️</div>
+      <div class="warning-text">
+        <strong>Recordatorio de Seguridad:</strong> Mantén la extensión activada para asegurar tu suscripción.
+      </div>
+    </div>
+
+    <!-- MAIN APP CONTAINER -->
+    <div id="mainAppSection" class="main-app-container">
+      
+      <!-- ESTADO 1: USUARIO LOGUEADO (TARJETA PERFIL DE USUARIO) -->
+      <div class="profile-card" id="profileCard">
+        <div class="profile-avatar">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+        </div>
+        <div class="profile-details">
+          <span class="profile-email" id="profileUserDisplay">almir</span>
+          <span class="profile-plan" id="profileRoleDisplay">Rol: Cliente</span>
+        </div>
+        <button id="logoutPlatformBtn" class="btn-icon-logout" title="Cerrar Sesión">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+        </button>
+      </div>
+
+      <!-- ESTADO 2: SESIÓN CERRADA (TARJETA DE INICIAR SESIÓN -> ABRE LOGIN.HTML) -->
+      <div class="login-prompt-card" id="loginPromptCard" style="display: none;">
+        <div class="login-prompt-content">
+          <div class="login-prompt-avatar">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path><polyline points="10 17 15 12 10 7"></polyline><line x1="15" y1="12" x2="3" y2="12"></line></svg>
+          </div>
+          <div class="login-prompt-details">
+            <span class="login-prompt-title">Iniciar sesión</span>
+            <span class="login-prompt-subtitle">Activar suscripción</span>
+          </div>
+        </div>
+        <button id="openLoginTabBtn" class="btn-login-action">Ingresar</button>
+      </div>
+
+      <!-- TARJETA DÍAS RESTANTES -->
+      <div class="days-card" id="daysCardContainer">
+        <div class="days-label">Días Restantes</div>
+        <div class="days-value">
+          <span id="daysCount">30</span>
+          <small id="daysUnitText">días</small>
+        </div>
+      </div>
+
+      <!-- SECCIÓN DE ACCESO A HERRAMIENTAS DIRECTAS -->
+      <div id="loggedSection" class="logged-card">
+        <div class="tools-header">
+          <span>Acceso a Herramientas</span>
+        </div>
+
+        <div class="tools-grid">
+          <button type="button" class="tool-btn" data-url="https://gemini.google.com/app">
+            <div class="icon-box purple">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"></path></svg>
+            </div>
+            <span>Google Gemini</span>
+          </button>
+
+          <button type="button" class="tool-btn" data-url="https://flow.google.com">
+            <div class="icon-box indigo">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+            </div>
+            <span>Flow</span>
+          </button>
+
+          <button type="button" class="tool-btn" data-url="https://notebooklm.google.com/">
+            <div class="icon-box sky">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+            </div>
+            <span>NotebookLM</span>
+          </button>
+
+          <button type="button" class="tool-btn" data-url="https://drive.google.com">
+            <div class="icon-box green">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 20H2l4-8h12l4 8z"/><path d="M8 12l4-8 4 8"/><path d="M2 20l7-12"/></svg>
+            </div>
+            <span>Drive</span>
+          </button>
+
+          <button type="button" class="tool-btn" data-url="https://vids.google.com">
+            <div class="icon-box red">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg>
+            </div>
+            <span>Vids</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- ESTADO DE LICENCIA EXPIRADA -->
+      <div id="expiredSection" class="expired-card" style="display: none;">
+        <div class="expired-banner">
+          <div class="expired-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+          </div>
+          <div class="banner-text">
+            <h3>Licencia Expirada</h3>
+            <p>Tu periodo de suscripción ha concluido.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="totp.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

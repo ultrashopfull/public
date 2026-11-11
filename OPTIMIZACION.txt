@@ -1,0 +1,60 @@
+ULTRASHOP — CAMBIOS DE LA VERSIÓN 8
+
+CORRECCIÓN DE LOS MODALES
+- Los avisos ya no dependen de coincidir con una lista de palabras: se muestran
+  los errores, validaciones y resultados de todas las acciones.
+- Mensajes persistentes dentro del modal que inició la operación.
+- Estado visible al guardar y botones de envío desactivados durante la espera;
+  se restauran al terminar y Cancelar/Cerrar siguen respondiendo.
+- Límite de espera también para las escrituras de la API anterior.
+- Recursos versionados por contenido para evitar código antiguo en caché.
+- Normalización de las URL de proyecto, Functions y /functions/v1/admin.
+- Probados mediante clics los formularios, confirmaciones, cierres y errores.
+
+CORRECCIÓN DE ACCESO
+- Recupera el acceso del administrador local original con la API anterior.
+- Conserva su contraseña; exige una comprobación de conexión y ADMIN_TOKEN
+  en cada inicio. No acepta credenciales locales para el servidor nuevo
+  ni contraseñas antiguas del personal de la base de datos.
+- Un fallo al descargar tras un login válido no se muestra como contraseña
+  incorrecta. Los mensajes de conexión aparecen en el formulario.
+
+CORRECCIÓN DE COMPATIBILIDAD
+- Detecta «Acción no implementada: panel_sync» y usa la API anterior.
+- Mantiene carga y operaciones compatibles con verificación tras guardar.
+- Las operaciones nuevas requieren actualizar el servidor; muestra un aviso
+  y no modifica los datos localmente como si se hubieran sincronizado.
+- Actualizar o recargar permite detectar la nueva API tras su despliegue.
+
+SINCRONIZACIÓN CON EL SERVIDOR ACTUALIZADO
+- Guardado común con transacciones de PostgreSQL y resultados confirmados.
+- Escrituras identificadas para evitar duplicados al perder una respuesta.
+- Conflictos entre paneles detectados mediante revisión del estado.
+- Lectura completa coherente, compartida entre peticiones simultáneas.
+- Refresco después de cambios, al volver al panel y recuperar conexión.
+- Formularios abiertos no cambian de cliente por refrescos en segundo plano.
+- Fallos de escritura conservan el formulario; no muestran éxito falso.
+- Cliente y cuenta elegida se guardan juntos, en una sola operación.
+- Tablas nuevas con RLS y acceso solo desde el servidor; funciones SECURITY
+  INVOKER y permisos explícitos. Nuevas contraseñas del personal con PBKDF2.
+- Índice para buscar suscripciones por cliente, producto e ID.
+- Detalles y pasos de despliegue en ACTIVAR_SINCRONIZACION.txt.
+
+INTERFAZ CONSERVADA
+- Carga progresiva de CSS y fuentes; estadísticas sin bloquear el primer render.
+- El diseño completo, las imágenes y las animaciones se mantienen.
+- Supabase: punto verde/gris/ámbar/rojo antes del selector de tema.
+- Logo: vuelve a Clientes. Buscador y fondo de pestañas redondeados.
+- Licencias: Nueva licencia y Editar a la derecha de las pestañas.
+- Eliminada la barra secundaria de nombre/clientes/Eliminar.
+- Eliminar licencia sigue dentro de Editar. Sin botón Ordenar en Clientes.
+- Orden por arrastre o Alt+flechas. Clientes nuevos primero.
+- Crear cliente requiere elegir una cuenta; no autoselecciona Cuenta 1.
+
+PRUEBAS
+PostgreSQL local y navegador, con casos de éxito, rollback, errores, doble envío,
+respuesta perdida, cambios concurrentes, lotes, permisos, base vacía y recarga.
+Revisión visual en escritorio y móvil. No se desplegó en la base real.
+
+El proyecto real identificado es usrvoxlyyqrhrpnwobuq. La conexión de Supabase
+no tiene permiso para administrarlo; no se desplegó ni modificó esa base.

@@ -1,0 +1,1534 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#ffffff" />
+    <meta name="referrer" content="no-referrer" />
+    <title>UltraShop · Panel de licencias</title>
+    <!-- Editable design prototype. Keep the relative folders beside this file. -->
+
+    <script src="js/00-initial-theme.js?v=4a9718d00d26"></script>
+    <script src="js/00-config.js"></script>
+
+    <!-- Load the complete panel first; statistics do not block its first paint.
+         styles.css remains the original source and the network-error fallback. -->
+    <!-- Poppins desde Google Fonts CDN — evita error CORS al abrir desde file:// -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" />
+
+    <link id="nova-interface" rel="stylesheet" href="css/panel.css?v=12dac9f9bd43"
+      onerror="this.onerror=null;this.href='css/styles.css?v=d13f69afd116'" />
+    <link id="nova-statistics" rel="stylesheet" href="css/statistics.css?v=e1d3b3f063d9" media="print"
+      onload="this.media='all'"
+      onerror="this.onerror=null;this.href='css/styles.css?v=d13f69afd116'" />
+    <style id="nova-brand">.ultra-logo-switch{display: block;position: relative;overflow: visible;aspect-ratio: 976/198;width: 174px;height: auto;flex: none;line-height: 0;}.ultra-logo-switch img{display: block;position: absolute;inset: 0;width: 100%;height: 100%;object-fit: contain;object-position: center;user-select: none;pointer-events: none;}:root[data-theme="dark"] .ultra-logo-on-light{display: none;}:root[data-theme="light"] .ultra-logo-on-dark{display: none;}.login-art .ultra-logo-switch, .login-brand .ultra-logo-switch{height: auto;}.shop-login-mark .ultra-logo-switch{width: 100%;height: 100%;aspect-ratio: auto;}@media (max-width: 640px){.ultra-logo-switch{width: 146px;}.login-brand .ultra-logo-switch{width: 210px;max-width: 100%;}}.user-table th:nth-child(1){width:19%}.user-table th:nth-child(2){width:14%}.user-table th:nth-child(3){width:12%}.user-table th:nth-child(4){width:9%}.user-table th:nth-child(5){width:8%}.user-table th:nth-child(6){width:9%}.user-table th:nth-child(7){width:10%}.user-table th:nth-child(8){width:19%}.client-password-control{display:flex;align-items:center;gap:6px;min-width:0;max-width:100%}.client-password-value{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:12px;overflow:auto;white-space:nowrap;max-width:150px;min-width:0;scrollbar-width:thin}.client-password-value.is-masked{letter-spacing:2px}.client-password-value.is-unavailable{font-family:inherit;font-size:10px;opacity:.6}.client-password-toggle{display:inline-flex;align-items:center;justify-content:center;flex:0 0 32px;width:32px;height:32px;border:1px solid color-mix(in srgb,currentColor 16%,transparent);border-radius:9px;background:transparent;color:inherit;cursor:pointer;transition:background .18s,color .18s,transform .18s}.client-password-toggle svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}.client-password-toggle:hover:not(:disabled),.client-password-toggle[aria-pressed="true"]{background:color-mix(in srgb,var(--accent,#6677ee) 14%,transparent);color:var(--accent,#6677ee)}.client-password-toggle:focus-visible{outline:2px solid var(--accent,#6677ee);outline-offset:3px}.client-password-toggle:disabled{opacity:.3;cursor:default}.user-table td.client-cell-changed{animation:client-cell-confirmed 850ms ease-out}@keyframes client-cell-confirmed{0%,20%{background-color:color-mix(in srgb,var(--accent,#6677ee) 24%,transparent)}100%{background-color:transparent}}@media(max-width:1000px){.user-table td.client-password-cell{grid-column:1/-1;grid-row:2;min-width:0;padding:0;justify-self:stretch}.client-password-control::before{content:"Contraseña";font-size:10px;opacity:.6;margin-right:5px}.client-password-value{max-width:min(260px,50vw)}.user-table td:nth-child(3),.user-table td:nth-child(4),.user-table td:nth-child(6),.user-table td:nth-child(7){grid-row:3}.user-table td:nth-child(8){grid-row:4}.user-table td.empty-state{grid-column:1/-1;grid-row:1}}@media(prefers-reduced-motion:reduce){.user-table td.client-cell-changed{animation:none}.client-password-toggle{transition:none}}button[data-modal-pending]::after,#loginForm[aria-busy="true"] button[type="submit"]::after{content:"";display:inline-block;width:12px;height:12px;margin-left:8px;vertical-align:-2px;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;animation:admin-pending-turn .8s linear infinite;}@keyframes admin-pending-turn{to{transform:rotate(360deg)}}@media(prefers-reduced-motion:reduce){button[data-modal-pending]::after,#loginForm[aria-busy="true"] button[type="submit"]::after{animation:none}}.master-card-footer > button.master-delete-btn{color:#d54747;margin-left:0;gap:6px}.master-card-footer > button.master-delete-btn:hover{background:rgba(213,71,71,.12);color:#c42f2f}:root[data-theme="dark"] .master-card-footer > button.master-delete-btn{color:#ff9292}#deleteMasterName{overflow-wrap:anywhere}#confirmDeleteMaster:disabled{opacity:.45;cursor:not-allowed}@media(max-width:480px){.master-card-footer{flex-wrap:wrap;gap:8px}.master-card-footer > button.master-delete-btn{padding-inline:9px;font-size:10px}}</style>
+    <noscript><link rel="stylesheet" href="css/styles.css?v=d13f69afd116" /></noscript>
+    <script>
+      // Keep early navigation fully styled, even on a very slow connection.
+      // This affects stylesheet readiness only; the original panel handlers run unchanged.
+      (() => {
+        const sheet = document.getElementById("nova-statistics");
+        let ready = false;
+        let pending = null;
+        function activate() {
+          sheet.media = "all";
+          ready = true;
+          document.removeEventListener("click", beforeNavigation, true);
+          if (pending && pending.isConnected) pending.click();
+          pending = null;
+        }
+        function beforeNavigation(event) {
+          const target = event.target.closest?.("#menuStats");
+          if (!target) {
+            pending = null;
+            return;
+          }
+          if (ready) return;
+          pending = target;
+          event.preventDefault();
+          event.stopImmediatePropagation();
+        }
+        document.addEventListener("click", beforeNavigation, true);
+        sheet.addEventListener("load", activate, { once: true });
+        // A cached sheet can have completed before this script executes.
+        if (sheet.sheet) activate();
+      })();
+    </script>
+  </head>
+  <body
+    ><svg
+      class="ultra-logo-definitions"
+      aria-hidden="true"
+      width="0"
+      height="0"
+      style="position: absolute; pointer-events: none"
+    >
+      <defs>
+        <image id="ultraLogoSource" width="1254" height="1254" href="assets/images/ultrashop-source.png" />
+        <filter id="ultraLogoContrast" color-interpolation-filters="sRGB">
+          <feColorMatrix type="matrix" values="1 1 1 0 -.08 1 1 1 0 -.08 1 1 1 0 -.08 0 0 0 1 0" />
+        </filter>
+        <clipPath id="ultraWordmarkWindow">
+          <rect x="145" y="507" width="966" height="192" />
+          <rect x="980" y="699" width="131" height="10" />
+        </clipPath>
+        <clipPath id="ultraGreenWindow"><rect x="850" y="545" width="130" height="130" /></clipPath>
+        <mask
+          id="ultraWordmarkMask"
+          maskUnits="userSpaceOnUse"
+          x="145"
+          y="507"
+          width="966"
+          height="202"
+          style="mask-type: luminance"
+        >
+          <g clip-path="url(#ultraWordmarkWindow)">
+            <use href="#ultraLogoSource" filter="url(#ultraLogoContrast)" />
+          </g>
+        </mask>
+      </defs>
+    </svg>
+    <section class="login-screen" id="loginScreen"
+      ><div class="login-content"
+        ><div class="login-art" aria-hidden="true"
+          ><span class="ultra-wordmark ultra-logo-switch" role="img" aria-label="UltraShop"
+            ><img
+              class="ultra-logo-on-dark"
+              src="assets/images/ultrashop-on-dark.png"
+              alt=""
+              draggable="false" /><img
+              class="ultra-logo-on-light"
+              src="assets/images/ultrashop-on-light.png"
+              alt=""
+              draggable="false" /></span></div
+        ><div class="login-panel"
+          ><div class="login-brand"
+            ><span class="ultra-wordmark ultra-logo-switch" role="img" aria-label="UltraShop"
+              ><img
+                class="ultra-logo-on-dark"
+                src="assets/images/ultrashop-on-dark.png"
+                alt=""
+                draggable="false" /><img
+                class="ultra-logo-on-light"
+                src="assets/images/ultrashop-on-light.png"
+                alt=""
+                draggable="false" /></span></div
+          ><form id="loginForm"
+            ><label for="loginUser">Usuario</label
+            ><input
+              id="loginUser"
+              type="text"
+              inputmode="text"
+              autocapitalize="none"
+              autocomplete="username"
+              spellcheck="false"
+              placeholder=""
+              required
+            /><label for="loginPassword">Contraseña</label
+            ><input
+              id="loginPassword"
+              type="password"
+              autocomplete="current-password"
+              placeholder="Contraseña"
+              required
+            /><div class="login-error" id="loginError" role="alert" hidden
+              >Usuario o contraseña incorrectos.</div
+            ><button class="login-submit" type="submit">Entrar <span>→</span></button></form
+          ><button class="biometric-btn" id="biometricBtn" type="button"
+            ><svg viewBox="0 0 32 32" aria-hidden="true">
+              <path
+                d="M7 14c0-5 4-9 9-9s9 4 9 9M10 15c0-3.4 2.6-6 6-6s6 2.6 6 6v2M13 17v-2a3 3 0 0 1 6 0v4m-8-1c0 4.7-1 6.3-3 8m8-11v4c0 3-1 6-2 8m6-5c-.7 2.3-1.6 4.2-2.4 5.3m7-11c0 5-1 8-3.4 11"
+              /></svg
+            ><span>Ingresar con huella</span></button
+          ><div class="login-help" id="loginHelp" role="status" aria-live="polite"></div></div></div
+    ></section>
+    <div class="app" id="app" hidden>
+      <header class="topbar">
+        <button class="brand brand-home" id="brandHome" type="button" title="Ir a Clientes" aria-label="UltraShop · Ir a Clientes"
+          ><span class="ultra-wordmark ultra-logo-switch" role="img" aria-label="UltraShop"
+            ><img
+              class="ultra-logo-on-dark"
+              src="assets/images/ultrashop-on-dark.png"
+              alt=""
+              draggable="false" /><img
+              class="ultra-logo-on-light"
+              src="assets/images/ultrashop-on-light.png"
+              alt=""
+              draggable="false" /></span
+        ></button>
+        <div class="top-actions"
+          ><span id="sbStatusBadge" class="sb-badge sb-off" role="status" aria-live="polite" aria-label="Supabase: desconectado" title="Supabase: desconectado"><span class="sb-status-dot" aria-hidden="true"></span><span class="sb-label">Desconectado</span></span><button id="clearPendingBtn" class="btn btn-sm" type="button" title="Elimina el guardado pendiente bloqueado" onclick="window.clearPanelPendingOp?.()" style="display:none;margin-left:6px;padding:2px 8px;font-size:11px;background:var(--accent,#e53935);color:#fff;border:none;border-radius:4px;cursor:pointer">🔓 Desbloquear</button><button class="theme-toggle" type="button" aria-label="Cambiar tema" title="Cambiar tema"
+            ><svg class="theme-sun" viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="12" cy="12" r="4" />
+              <path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5" /></svg
+            ><svg class="theme-moon" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M20.5 14A8.5 8.5 0 0 1 10 3.5 8.5 8.5 0 1 0 20.5 14Z" /></svg></button
+           ><span class="refresh-wrap"
+            ><button
+              class="refresh-button"
+              id="refreshDataBtn"
+              type="button"
+              title="Actualizar datos"
+              aria-label="Actualizar datos"
+              ><svg class="refresh-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M20 7v5h-5M4 17v-5h5" />
+                <path d="M5.5 9a7 7 0 0 1 12-2L20 12M4 12l2.5 5a7 7 0 0 0 12-2" /></svg
+              ><svg class="refresh-check" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="m5 12 4 4 10-10" /></svg></button
+            ><span class="refresh-status" id="refreshStatus" role="status" aria-live="polite"></span></span
+          ><div class="profile-wrap"
+            ><button
+              class="profile-button"
+              id="profileMenuBtn"
+              aria-label="Abrir menú de cuenta"
+              type="button"
+              aria-haspopup="true"
+              aria-expanded="false"
+              ><svg class="profile-user-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <circle cx="12" cy="8" r="3.5" />
+                <path d="M5 20c0-3.5 2.8-6 7-6s7 2.5 7 6" /></svg
+              ><span class="profile-name">Víctor</span
+              ><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg></button
+            ><div class="profile-menu" id="profileMenu" hidden
+              ><button id="menuClients" type="button"
+                ><span class="menu-symbol"
+                  ><svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M9 6h12M9 12h12M9 18h12M3 6h.01M3 12h.01M3 18h.01" /></svg
+                ></span>
+                Clientes</button
+              ><button id="menuStats" type="button"
+                ><span class="menu-symbol"
+                  ><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V10m5 9V5m5 14v-8m5 8V7" /></svg
+                ></span>
+                Estadísticas</button
+              ><button id="menuUsers" type="button"
+                ><span class="menu-symbol"
+                  ><svg viewBox="0 0 24 24" aria-hidden="true">
+                    <circle cx="9" cy="8" r="3" />
+                    <path d="M3 20v-2a6 6 0 0 1 12 0v2M17 5a3 3 0 0 1 0 6M18 14a5 5 0 0 1 3 4v2" /></svg
+                ></span>
+                Usuarios</button
+              ><button id="menuAccounts" type="button"
+                ><span class="menu-symbol"
+                  ><svg viewBox="0 0 24 24" aria-hidden="true">
+                    <rect x="3" y="3" width="7" height="7" rx="1" />
+                    <rect x="14" y="3" width="7" height="7" rx="1" />
+                    <rect x="3" y="14" width="7" height="7" rx="1" />
+                    <rect x="14" y="14" width="7" height="7" rx="1" /></svg
+                ></span>
+                Licencias</button
+              ><div class="menu-separator"></div
+              ><button id="menuDisconnect" type="button" hidden
+                ><span class="menu-symbol"
+                  ><svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M12 3v8M6.3 5.8a8 8 0 1 0 11.4 0" /></svg
+                ></span>
+                Desconectar Supabase</button
+              ><button id="menuLogout" type="button"
+                ><span class="menu-symbol"
+                  ><svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M10 4H5v16h5M14 8l4 4-4 4M9 12h12" /></svg
+                ></span>
+                Cerrar sesión</button
+              ></div
+            ></div
+          ></div
+        >
+      </header>
+      <main class="workspace">
+        <div class="management-head"><h1>Clientes</h1></div>
+        <div class="tabs-wrap client-license-rail">
+          <nav class="tabs" id="tabs"
+            ><button class="tab active" data-license="ChatGPT"
+              >ChatGPT <span class="tab-count">06</span></button
+            ><button class="tab" data-license="Gemini">Gemini <span class="tab-count">04</span></button
+            ><button class="tab" data-license="Perplexity"
+              >Perplexity <span class="tab-count">03</span></button
+            ><button class="tab" data-license="CapCut">CapCut <span class="tab-count">08</span></button
+            ><button class="tab" data-license="Claude">Claude <span class="tab-count">02</span></button
+            ><button class="tab" data-license="Superprompt"
+              >Superprompt <span class="tab-count">05</span></button
+            ></nav>
+        </div>
+        <div class="toolbar"
+          ><div class="toolbar-left"
+            ><label class="search"
+              ><svg viewBox="0 0 24 24">
+                <circle cx="10.8" cy="10.8" r="6.8" />
+                <path d="m16 16 4 4" /></svg
+              ><input id="search" placeholder="Buscar..." autocomplete="off" /><button
+                class="clear-search"
+                id="clearSearch"
+                type="button"
+                title="Borrar búsqueda"
+                aria-label="Borrar búsqueda"
+                hidden
+                >×</button
+              ></label
+            ><div class="filter-wrap"
+              ><button
+                class="filter-btn"
+                id="filterBtn"
+                type="button"
+                aria-label="Filtrar clientes"
+                aria-haspopup="true"
+                aria-expanded="false"
+                ><svg viewBox="0 0 24 24"><path d="M4 6h16M7 12h10m-7 6h4" /></svg
+                ><span id="filterLabel">Todos</span><span class="chevron">⌄</span></button
+              ><div class="filter-menu" id="filterMenu" role="menu" hidden></div></div
+            ><button
+              class="bulk-migrate-btn admin-action"
+              id="bulkMigrateBtn"
+              type="button"
+              title="Migrador masivo"
+              aria-label="Migrador masivo"
+              ><svg viewBox="0 0 24 24" aria-hidden="true">
+                <rect x="3" y="3" width="6" height="7" rx="1.5" />
+                <rect x="3" y="14" width="6" height="7" rx="1.5" />
+                <path d="M13 6h8m-3-3 3 3-3 3M13 18h8m-3-3 3 3-3 3" /></svg></button></div
+          ><div class="toolbar-right"
+            ><button
+              class="camera-import-btn"
+              id="cameraImportBtn"
+              type="button"
+              title="Leer número desde una captura"
+              aria-label="Leer número desde una captura"
+              ><svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M3 7.5h4l1.7-2h6.6l1.7 2H21v10.7a1.8 1.8 0 0 1-1.8 1.8H4.8A1.8 1.8 0 0 1 3 18.2z" />
+                <circle cx="12" cy="13.4" r="3.5" /></svg></button
+            ><button class="create-user-btn" id="createUserBtn" type="button" aria-label="Crear usuario"
+              ><span>+</span> Crear</button
+            ><input id="clientScreenshot" type="file" accept="image/*" hidden /></div
+        ></div>
+        <div class="table-scroll"
+          ><table class="user-table"
+            ><thead
+              ><tr
+                ><th>Usuario</th><th>Contraseña</th><th>Celular</th><th>Dispositivo</th><th>Estado</th><th>Cuenta</th
+                ><th>Días</th><th>Acciones</th></tr
+              ></thead
+            ><tbody id="userRows"></tbody></table
+        ></div>
+      </main>
+      <section class="staff-view management-view" id="staffView" hidden>
+        <div class="management-head"
+          ><div
+            ><span class="management-eyebrow">EQUIPO NOVA</span><h1>Usuarios</h1
+            ><p>Personas con acceso al panel.</p></div
+          ><button class="management-add" id="addStaff" type="button">+ Crear usuario</button></div
+        >
+
+        <div class="staff-table-wrap"
+          ><table class="staff-table"
+            ><thead
+              ><tr
+                ><th
+                  ><div class="staff-credential-head"><span>Usuario</span><span>Contraseña</span></div></th
+                ><th>Rol</th><th>Estado</th><th>Último acceso</th><th>Puede vender</th><th>Acciones</th></tr
+              ></thead
+            ><tbody id="staffRows"></tbody></table
+        ></div>
+      </section>
+      <section class="masters-view management-view" id="mastersView" hidden>
+        <div class="management-head"
+          ><div
+            ><span class="management-eyebrow">INVENTARIO DE ACCESOS</span><h1>Licencias</h1
+            ><p>Credenciales, vigencia y notas por licencia.</p></div
+          ></div>
+        <div class="master-license-bar"><nav class="master-tabs" id="masterTabs" aria-label="Licencias disponibles"></nav><div class="master-license-actions"><button class="management-add license-new-button" id="licenseManagerBtn" type="button">+ Nueva licencia</button><button class="license-secondary-button" id="editCurrentLicense" type="button" aria-label="Editar licencia seleccionada" title="Editar licencia"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 5 4 4M4 20l4-1L20 7a2.8 2.8 0 0 0-4-4L4 15Z"/></svg><span>Editar</span></button></div></div>
+        <div class="master-card-grid" id="masterCardGrid"></div>
+      </section>
+      <section
+        class="statistics-view management-view"
+        id="statisticsView"
+        aria-labelledby="statisticsTitle"
+        hidden
+      >
+        <div class="stats-v5" id="statsSimpleRoot">
+          <header class="stats-v5-header">
+            <div><h1 id="statsSimpleTitle">Estadísticas</h1></div>
+          </header>
+          <div class="stats-v5-rail" role="group" aria-label="Filtros de estadísticas">
+            <nav
+              class="master-tabs stats-license-nav"
+              id="statsLicenseTabs"
+              aria-label="Licencias"
+              role="group"
+            ></nav>
+            <div class="stats-v5-months" id="statsMonthsWrap">
+              <button
+                type="button"
+                id="statsMonthsTrigger"
+                class="stats-v5-month-btn"
+                aria-haspopup="listbox"
+                aria-controls="statsMonthsMenu"
+                aria-expanded="false"
+                aria-label="Plazo de vencimientos: 1 mes"
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <rect x="3" y="5" width="18" height="16" rx="2" />
+                  <path d="M7 3v4m10-4v4M3 10h18" /></svg
+                ><span id="statsMonthsCaption">1 mes</span
+                ><svg class="stats-v5-chevron" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="m6 9 6 6 6-6" />
+                </svg>
+              </button>
+              <div
+                class="stats-v5-month-menu"
+                id="statsMonthsMenu"
+                role="listbox"
+                aria-label="Meses para próximos vencimientos"
+                hidden
+              >
+                <div class="stats-v5-month-help">Período de vencimientos</div>
+                <button type="button" role="option" data-stats-month="0" aria-selected="false"
+                  >Total · sin límite</button
+                >
+                <button type="button" role="option" data-stats-month="30" aria-selected="true">1 mes</button>
+                <button type="button" role="option" data-stats-month="60" aria-selected="false"
+                  >2 meses</button
+                >
+                <button type="button" role="option" data-stats-month="90" aria-selected="false"
+                  >3 meses</button
+                >
+                <button type="button" role="option" data-stats-month="180" aria-selected="false"
+                  >6 meses</button
+                >
+              </div>
+            </div>
+          </div>
+          <div id="statsSimpleOverview" class="stats-v5-screen">
+            <div class="stats-v5-section-head"
+              ><div><h2>Resumen general</h2></div></div
+            >
+            <div class="stats-v5-metrics" id="statsOverviewMetrics"></div>
+            <div class="stats-v5-main-grid">
+              <article class="stats-v5-card"
+                ><div class="stats-v5-card-title"><h3>Distribución por licencia</h3></div
+                ><div class="stats-v6-distribution"
+                  ><div
+                    id="statsOverviewDonut"
+                    class="stats-v6-donut"
+                    role="img"
+                    aria-label="Gráfico de distribución de accesos"
+                  ></div
+                  ><div id="statsOverviewLicenses" class="stats-v5-products"></div></div
+              ></article>
+              <article class="stats-v5-card"
+                ><div class="stats-v5-card-title"
+                  ><h3>Vencimientos de cuentas maestras</h3><small id="statsOverviewMasterLabel"></small></div
+                ><div id="statsOverviewMasters" class="stats-v5-notices"></div
+              ></article>
+            </div>
+            <article class="stats-v5-card stats-v5-clients-panel"
+              ><div class="stats-v5-card-title"
+                ><h3>Clientes próximos a vencer</h3><small id="statsOverviewClientsLabel"></small></div
+              ><div id="statsOverviewClients" class="stats-v5-clients"></div
+            ></article>
+          </div>
+          <div id="statsSimpleDetail" class="stats-v5-screen" hidden>
+            <div class="stats-v5-section-head"
+              ><div
+                ><h2 id="statsDetailTitle"><span class="stats-v5-dot"></span>Licencia</h2></div
+              ></div
+            >
+            <div class="stats-v5-metrics" id="statsDetailMetrics"></div>
+            <div class="stats-v5-main-grid stats-v6-charts-row">
+              <article class="stats-v5-card stats-v5-status-panel"
+                ><div class="stats-v5-card-title"
+                  ><h3>Estado de accesos</h3><small id="statsDetailStatusInfo"></small></div
+                ><div class="stats-v6-detail-ring"
+                  ><div
+                    class="stats-v6-donut"
+                    id="statsDetailDonut"
+                    role="img"
+                    aria-label="Gráfico de estados de la licencia"
+                  ></div
+                  ><div class="stats-v5-status-key" id="statsDetailStatusKey"></div></div
+                ><div class="stats-v5-status-track" id="statsDetailStatusTrack" hidden></div
+              ></article>
+              <article class="stats-v5-card"
+                ><div class="stats-v5-card-title"
+                  ><h3>Vencimientos próximos</h3><small id="statsV6ExpiryCount"></small></div
+                ><div id="statsV6ExpiryBars" class="stats-v6-expiry"></div
+              ></article>
+            </div>
+            <div class="stats-v5-main-grid">
+              <article class="stats-v5-card"
+                ><div class="stats-v5-card-title"
+                  ><h3>Clientes próximos a vencer</h3><small id="statsDetailClientsLabel"></small></div
+                ><div id="statsDetailClients" class="stats-v5-clients"></div
+              ></article>
+              <article class="stats-v5-card"
+                ><div class="stats-v5-card-title"
+                  ><h3>Cuentas maestras por renovar</h3><small id="statsDetailMasterLabel"></small></div
+                ><div id="statsDetailMasters" class="stats-v5-notices"></div
+              ></article>
+            </div>
+          </div>
+          <p class="stats-v5-footnote"
+            >Datos calculados a partir de los registros guardados. El filtro de fechas afecta a los próximos
+            vencimientos.</p
+          >
+        </div>
+        <div class="stats-v5-legacy" hidden>
+          <div class="statistics-heading">
+            <div>
+              <h1 id="statisticsTitle">Estadísticas</h1>
+              <p
+                >Consulta el estado de tus accesos, detecta vencimientos y compara licencias en un solo
+                lugar.</p
+              >
+            </div>
+            <div class="statistics-heading-actions">
+              <button
+                class="statistics-ghost-button"
+                type="button"
+                id="statsReload"
+                title="Actualizar desde los datos guardados"
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M20 7v5h-5M4 17v-5h5" />
+                  <path d="M5.5 9a7 7 0 0 1 12-2L20 12M4 12l2.5 5a7 7 0 0 0 12-2" />
+                </svg>
+                Actualizar
+              </button>
+              <button class="statistics-primary-button" type="button" id="statsExport">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M12 3v12m-4-4 4 4 4-4M4 17v3h16v-3" />
+                </svg>
+                Exportar CSV
+              </button>
+            </div>
+          </div>
+
+          <select id="statsLicenseFilter" hidden tabindex="-1" aria-hidden="true"
+            ><option value="all">Todas las licencias</option></select
+          >
+          <div class="statistics-controls stats-compact-controls" aria-label="Opciones de estadísticas">
+            <div class="statistics-filter-group">
+              <label for="statsWindowFilter">Vencimientos en</label>
+              <select id="statsWindowFilter" aria-label="Horizonte de vencimientos">
+                <option value="7">7 días</option
+                ><option value="14">14 días</option
+                ><option value="0">Total</option
+                ><option value="30" selected>30 días</option
+                ><option value="60">60 días</option
+                ><option value="90">90 días</option
+                ><option value="180">180 días</option>
+              </select>
+            </div>
+            <span class="statistics-live" id="statsTimestamp" aria-live="polite"></span>
+          </div>
+          <div class="stats-v3-section-title"
+            ><div
+              ><span>01 · RESUMEN</span><h2>Estado general</h2
+              ><p>Una vista rápida de tus accesos y su vigencia.</p></div
+            ><small>Un cliente puede tener más de una licencia</small></div
+          >
+          <div class="stats-v3-health statistics-panel" aria-label="Resumen de accesos por estado">
+            <div class="stats-v3-health-top"
+              ><div
+                ><span class="stats-v3-eyebrow">VIGENCIA ACTUAL</span
+                ><div class="stats-v3-health-percentage"
+                  ><strong id="statsHealthPercent">0%</strong><span>de accesos activos</span></div
+                ></div
+              ><div class="stats-v3-health-message" id="statsHealthMessage">Calculando información…</div></div
+            >
+            <div
+              class="stats-v3-health-track"
+              id="statsHealthTrack"
+              role="img"
+              aria-label="Distribución de accesos"
+            ></div>
+            <div class="stats-v3-health-key" id="statsHealthKey"></div>
+          </div>
+          <div class="statistics-kpis" id="statisticsKpis" aria-label="Indicadores principales">
+            <article class="statistics-kpi"
+              ><span class="statistics-kpi-top"
+                ><span>Accesos registrados</span><span class="statistics-kpi-symbol">↗</span></span
+              ><strong id="statsTotal">0</strong
+              ><small id="statsTotalDetail">Un registro por licencia</small></article
+            >
+            <article class="statistics-kpi"
+              ><span class="statistics-kpi-top"
+                ><span>Activos</span><span class="statistics-kpi-symbol is-green">●</span></span
+              ><strong id="statsActive">0</strong><small id="statsActiveDetail">0% del total</small></article
+            >
+            <article class="statistics-kpi"
+              ><span class="statistics-kpi-top"
+                ><span>Por vencer</span><span class="statistics-kpi-symbol is-amber">◷</span></span
+              ><strong id="statsExpiring">0</strong
+              ><small id="statsExpiringDetail">Según período elegido</small></article
+            >
+            <article class="statistics-kpi"
+              ><span class="statistics-kpi-top"
+                ><span>Vencidos</span><span class="statistics-kpi-symbol is-red">↓</span></span
+              ><strong id="statsExpired">0</strong><small>Accesos no vigentes</small></article
+            >
+            <article class="statistics-kpi"
+              ><span class="statistics-kpi-top"
+                ><span>Suspendidos</span><span class="statistics-kpi-symbol is-purple">Ⅱ</span></span
+              ><strong id="statsSuspended">0</strong><small>Acceso restringido</small></article
+            >
+            <article class="statistics-kpi"
+              ><span class="statistics-kpi-top"
+                ><span>Pruebas</span><span class="statistics-kpi-symbol">◇</span></span
+              ><strong id="statsTrials">0</strong
+              ><small id="statsTrialsDetail">Incluye activas y vencidas</small></article
+            >
+            <article class="statistics-kpi"
+              ><span class="statistics-kpi-top"
+                ><span>Clientes únicos</span><span class="statistics-kpi-symbol">♧</span></span
+              ><strong id="statsUnique">0</strong
+              ><small id="statsUniqueDetail">Correos diferentes registrados</small></article
+            >
+            <article class="statistics-kpi"
+              ><span class="statistics-kpi-top"
+                ><span>Vencen en 7 días</span><span class="statistics-kpi-symbol is-amber">!</span></span
+              ><strong id="statsWeek">0</strong><small>Incluidos en «Por vencer»</small></article
+            >
+          </div>
+          <div class="stats-v3-section-title"
+            ><div
+              ><span>02 · PRIORIDADES</span><h2>Alertas y seguimiento</h2
+              ><p
+                >Identifica los accesos que necesitan atención primero. Las alertas no incluyen
+                suspendidos.</p
+              ></div
+            ><button type="button" class="stats-v3-link" id="statsJumpUpcoming"
+              >Ir a la lista <span aria-hidden="true">↘</span></button
+            ></div
+          >
+          <div class="stats-v3-alerts" id="statsAlerts" aria-label="Alertas por vencimiento"></div>
+          <div class="stats-v3-section-title stats-master-heading" id="statsMastersSection">
+            <div
+              ><span>03 · CUENTAS MAESTRAS</span><h2>Renovaciones de cuentas maestras</h2
+              ><p
+                >Revisa las cuentas maestras que están por vencer o ya vencieron. Se utiliza la fecha de fin
+                guardada en Cuentas maestras.</p
+              ></div
+            >
+            <button class="stats-v3-link" type="button" id="statsGoMasterAccounts"
+              >Ver cuentas maestras <span aria-hidden="true">↗</span></button
+            >
+          </div>
+          <div
+            class="stats-master-summary"
+            id="statsMasterSummary"
+            aria-label="Estado de las cuentas maestras"
+          ></div>
+          <article class="statistics-panel stats-master-panel" id="statsMasterPanel">
+            <div class="statistics-panel-heading"
+              ><div
+                ><h2>Cuentas que necesitan atención</h2
+                ><p id="statsMasterExplanation">Vencidas y próximas a vencer, por fecha más cercana</p></div
+              ><span class="statistics-mini-label" id="statsMasterAlertsCount">0 avisos</span></div
+            >
+            <div id="statsMasterList" class="stats-master-list" aria-live="polite"></div>
+            <div class="stats-master-footer" id="statsMasterFooter"></div>
+          </article>
+          <div class="stats-v3-section-title"
+            ><div
+              ><span>04 · LICENCIAS</span><h2>Distribución por producto</h2
+              ><p>Cada licencia conserva su propio color. Toca una licencia para ver sus datos.</p></div
+            ></div
+          >
+          <div class="statistics-row statistics-row-lead">
+            <article class="statistics-panel statistics-product-panel">
+              <div class="statistics-panel-heading"
+                ><div
+                  ><h2>Accesos por licencia</h2
+                  ><p
+                    >Volumen por licencia · tono intenso: activos; claro: vencidos; rayado: suspendidos</p
+                  ></div
+                ><span class="statistics-mini-label" id="statsProductCount">0 licencias</span></div
+              >
+              <div id="statsLicenseChart" class="statistics-license-chart"></div>
+              <div class="statistics-legend" aria-label="Leyenda de intensidad"
+                ><span><i class="stats-sample is-active"></i> Activos</span
+                ><span><i class="stats-sample is-expired"></i> Vencidos</span
+                ><span><i class="stats-sample is-suspended"></i> Suspendidos</span></div
+              >
+            </article>
+            <article class="statistics-panel statistics-status-panel">
+              <div class="statistics-panel-heading"
+                ><div
+                  ><h2>Participación en el total</h2
+                  ><p>Colores originales de cada licencia · selecciona para filtrar</p></div
+                ></div
+              >
+              <div class="statistics-donut-container"
+                ><div
+                  id="statsDonut"
+                  class="statistics-donut"
+                  role="img"
+                  aria-label="Distribución de licencias"
+                  ><svg id="statsDonutSvg" viewBox="0 0 180 180" aria-hidden="true"></svg
+                  ><div class="statistics-donut-center"
+                    ><strong id="statsDonutCount">0</strong><span>accesos</span></div
+                  ></div
+                ></div
+              >
+              <div id="statsStatusList" class="statistics-status-list"></div>
+            </article>
+          </div>
+          <div class="stats-v3-section-title"
+            ><div
+              ><span>05 · TIEMPO</span><h2>Evolución y vencimientos</h2
+              ><p
+                >Datos agrupados por fecha o por días restantes. Las renovaciones no se cuentan como nuevas
+                ventas.</p
+              ></div
+            ></div
+          >
+          <div class="statistics-row statistics-row-trends">
+            <article class="statistics-panel">
+              <div class="statistics-panel-heading"
+                ><div
+                  ><h2>Inicio de vigencias</h2
+                  ><p>Últimos 6 meses · cada color representa una licencia</p></div
+                ></div
+              >
+              <div
+                id="statsHistoryChart"
+                class="statistics-history-chart"
+                role="img"
+                aria-label="Inicios de vigencia por mes"
+              ></div>
+              <p class="statistics-chart-note" id="statsHistoryNote"></p>
+            </article>
+            <article class="statistics-panel">
+              <div class="statistics-panel-heading"
+                ><div
+                  ><h2>Calendario de vencimientos</h2
+                  ><p id="statsExpirySubtitle">Próximos 30 días, por intervalos</p></div
+                ><span class="statistics-mini-label" id="statsForecastCount">0 previstos</span></div
+              >
+              <div
+                id="statsExpiryChart"
+                class="statistics-history-chart"
+                role="img"
+                aria-label="Próximos vencimientos"
+              ></div>
+              <p class="statistics-chart-note"
+                >Incluye proyecciones basadas en días restantes cuando falta la fecha exacta.</p
+              >
+            </article>
+          </div>
+          <div class="stats-v3-section-title"
+            ><div
+              ><span>06 · DESGLOSE</span><h2>Comparación de licencias</h2
+              ><p>Compara el número de accesos, su vigencia y dónde se utilizan.</p></div
+            ></div
+          >
+          <div class="statistics-row statistics-row-details">
+            <article class="statistics-panel">
+              <div class="statistics-panel-heading"
+                ><div
+                  ><h2>Detalle por licencia</h2
+                  ><p>Activos, vencidos, suspendidos y alertas por producto</p></div
+                ><label class="stats-v3-sort-label" for="statsProductSort"
+                  >Ordenar
+                  <select id="statsProductSort"
+                    ><option value="volume">Más accesos</option
+                    ><option value="active">Más activos</option
+                    ><option value="risk">Más por vencer</option
+                    ><option value="rate">Mayor % activo</option
+                    ><option value="name">Nombre</option></select
+                  ></label
+                ></div
+              >
+              <div class="statistics-table-scroll"
+                ><table class="statistics-table"
+                  ><thead
+                    ><tr
+                      ><th>Licencia</th><th>Accesos</th><th>Activos</th><th>Vencidos</th><th>Susp.</th
+                      ><th>Por vencer</th><th>% activo</th></tr
+                    ></thead
+                  ><tbody id="statsProductsBody"></tbody></table
+              ></div>
+            </article>
+            <article class="statistics-panel">
+              <div class="statistics-panel-heading"
+                ><div
+                  ><h2>Dispositivos por licencia</h2
+                  ><p>Distribución de productos dentro de cada dispositivo</p></div
+                ></div
+              >
+              <div id="statsDevicesChart" class="statistics-devices-chart"></div>
+            </article>
+          </div>
+          <div class="stats-v3-secondary-grid">
+            <article class="statistics-panel"
+              ><div class="statistics-panel-heading"
+                ><div
+                  ><h2>Tiempo restante</h2><p>Cómo se distribuyen los accesos activos antes de vencer</p></div
+                ></div
+              ><div class="stats-v3-buckets" id="statsRemainingBuckets"></div
+              ><p class="statistics-chart-note">Los suspendidos y vencidos no se incluyen aquí.</p></article
+            >
+            <article class="statistics-panel"
+              ><div class="statistics-panel-heading"
+                ><div
+                  ><h2>Calidad de los registros</h2
+                  ><p>Campos disponibles para el análisis y seguimiento</p></div
+                ><span id="statsQualityGrade" class="statistics-mini-label">—</span></div
+              ><div class="stats-v3-quality" id="statsQuality"></div
+              ><p class="statistics-chart-note"
+                >Una fecha de fin ausente no significa necesariamente que la licencia haya vencido.</p
+              ></article
+            >
+          </div>
+          <div class="stats-v3-section-title"
+            ><div
+              ><span>07 · CLIENTES</span><h2>Agenda de vencimientos</h2
+              ><p
+                >Accesos activos que vencerán dentro del período seleccionado. Busca por cliente o
+                licencia.</p
+              ></div
+            ></div
+          >
+          <article class="statistics-panel statistics-upcoming-panel" id="statsUpcomingPanel">
+            <div class="statistics-panel-heading"
+              ><div><h2>Clientes por vencer</h2><p>Ordenados desde el vencimiento más próximo</p></div
+              ><span class="statistics-mini-label" id="statsUpcomingCount">0 clientes</span></div
+            >
+            <div class="stats-v3-search-wrap"
+              ><label class="stats-v3-search" for="statsUpcomingSearch"
+                ><svg viewBox="0 0 24 24" aria-hidden="true">
+                  <circle cx="11" cy="11" r="7" />
+                  <path d="m16 16 5 5" /></svg
+                ><input
+                  type="search"
+                  id="statsUpcomingSearch"
+                  placeholder="Buscar cliente, licencia o cuenta…"
+                  autocomplete="off" /></label
+              ><span id="statsUpcomingVisible" class="stats-v3-muted"></span
+            ></div>
+            <div class="statistics-table-scroll"
+              ><table class="statistics-table statistics-upcoming-table"
+                ><thead
+                  ><tr
+                    ><th>Cliente</th><th>Licencia</th><th>Cuenta</th><th>Vigencia</th
+                    ><th>Días restantes</th></tr
+                  ></thead
+                ><tbody id="statsUpcomingBody"></tbody></table
+            ></div>
+            <div class="stats-v3-more-wrap"
+              ><button class="stats-v3-more" id="statsUpcomingMore" type="button" hidden
+                >Ver más clientes ↓</button
+              ></div
+            >
+          </article>
+          <p class="statistics-data-footnote"
+            >Fuente: registros guardados en UltraShop. «Accesos» = filas de licencias; «clientes únicos» =
+            correos diferentes (los que no tienen correo se cuentan por separado). Las cifras de inicio
+            reflejan las fechas actualmente guardadas, no un historial de ventas. No se estiman ingresos
+            porque no existen precios ni un historial de transacciones completo.</p
+          >
+        </div>
+      </section>
+    </div>
+    <div class="modal-backdrop" id="createBackdrop" hidden
+      ><section class="dialog create-dialog" role="dialog" aria-modal="true" aria-labelledby="createTitle"
+        ><header class="dialog-head"
+          ><div><h2 id="createTitle">Nuevo acceso</h2></div
+          ><button class="close-btn" data-close="#createBackdrop" aria-label="Cerrar">×</button></header
+        ><form id="createForm"
+          ><div class="form-grid create-fields"
+            ><label
+              ><span class="field-label">Usuario o correo</span
+              ><span class="input-paste-wrap"
+                ><input class="input" id="createEmail" type="text" placeholder="" /><button
+                  class="field-paste-btn"
+                  type="button"
+                  data-paste-target="createEmail"
+                  aria-label="Pegar usuario"
+                  aria-controls="createEmail"
+                  ><svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M9 5H6a2 2 0 0 0-2 2v13h16V7a2 2 0 0 0-2-2h-3" />
+                    <rect x="9" y="3" width="6" height="4" rx="1" />
+                    <path d="M9 12h6m-6 4h6" /></svg
+                  ><span>Pegar</span></button
+                ></span
+              ><span
+                class="field-paste-hint"
+                data-paste-hint="createEmail"
+                role="status"
+                hidden
+              ></span></label
+            ><label
+              ><span class="field-label">Celular</span
+              ><span class="input-paste-wrap"
+                ><input class="input" id="createPhone" type="tel" placeholder="" /><button
+                  class="field-paste-btn"
+                  type="button"
+                  data-paste-target="createPhone"
+                  aria-label="Pegar celular"
+                  aria-controls="createPhone"
+                  ><svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M9 5H6a2 2 0 0 0-2 2v13h16V7a2 2 0 0 0-2-2h-3" />
+                    <rect x="9" y="3" width="6" height="4" rx="1" />
+                    <path d="M9 12h6m-6 4h6" /></svg
+                  ><span>Pegar</span></button
+                ></span
+              ><span
+                class="field-paste-hint"
+                data-paste-hint="createPhone"
+                role="status"
+                hidden
+              ></span></label
+             ><label
+               ><span class="field-label">Contraseña</span
+               ><input class="input" id="createPassword" type="text" placeholder="Contraseña de acceso" autocomplete="off" /></label
+             ><label class="create-account-field"
+               ><span class="field-label">Cuenta</span
+              ><div class="nova-select" data-select="createAccount"
+                ><select class="input native-select" id="createAccount" aria-label="Cuenta"></select
+                ><button
+                  class="nova-select-trigger"
+                  type="button"
+                  aria-label="Seleccionar cuenta"
+                  aria-haspopup="listbox"
+                  aria-expanded="false"
+                  ><span data-select-value>Seleccionar cuenta</span
+                  ><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg></button
+                ><div class="nova-select-options" role="listbox" hidden></div></div></label></div
+          ><div class="field-label duration-label">Duración</div
+          ><div class="duration-options" id="durationChoices"
+            ><button class="duration-option selected" type="button" data-duration="month1">Un mes</button
+            ><button class="duration-option" type="button" data-duration="month2">Dos meses</button
+            ><button class="duration-option" type="button" data-duration="custom">Personalizado</button></div
+          ><div class="custom-calendar" id="customDates" hidden
+            ><div class="calendar-host" id="createCalendar"></div
+            ><div class="range-summary" id="createRangeSummary"
+              >Toca la fecha de inicio y después la fecha final.</div
+            ></div
+          ><div class="duration-note" id="durationNote">30 días desde hoy</div
+          ><label class="trial-row"
+            ><strong>Prueba · 1 hora</strong><input id="createTrial" type="checkbox" /><i></i></label
+          ><div class="dialog-actions create-actions"
+            ><button
+              class="secondary-btn copy-btn"
+              type="button"
+              id="createCopyBtn"
+              aria-label="Crear usuario y copiar acceso"
+              title="Crear y copiar acceso"
+              ><svg viewBox="0 0 24 24" aria-hidden="true">
+                <rect x="8" y="8" width="11" height="12" rx="2" />
+                <path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h2" /></svg></button
+            ><button class="primary-btn" type="submit"
+              >Crear usuario <span aria-hidden="true">↗</span></button
+            ></div
+          ></form
+        ></section
+      ></div
+    >
+    <div class="modal-backdrop" id="editBackdrop" hidden
+      ><section class="dialog compact" role="dialog" aria-modal="true"
+        ><header class="dialog-head"
+          ><div><div class="dialog-kicker">ACTUALIZAR ACCESO</div><h2 id="editTitle">Editar usuario</h2></div
+          ><button class="close-btn" data-close="#editBackdrop" aria-label="Cerrar">×</button></header
+        ><form id="editForm"
+          ><input type="hidden" id="editIndex" /><input type="hidden" id="editField" /><div
+            id="editValueWrap"
+          ></div
+          ><div class="dialog-actions"
+            ><button class="secondary-btn" type="button" data-close="#editBackdrop">Cancelar</button
+            ><button class="primary-btn" type="submit">Guardar cambios</button></div
+          ></form
+        ></section
+      ></div
+    >
+    <div class="modal-backdrop" id="clientEditBackdrop" hidden
+      ><section class="dialog compact" role="dialog" aria-modal="true" aria-labelledby="clientEditTitle"
+        ><header class="dialog-head"
+          ><div><div class="dialog-kicker">CLIENTE</div><h2 id="clientEditTitle">Editar cliente</h2></div
+          ><button class="close-btn" type="button" data-close="#clientEditBackdrop" aria-label="Cerrar"
+            >×</button
+          ></header
+        ><form id="clientEditForm"
+          ><div class="client-edit-form"
+            ><label class="full"
+              ><span class="field-label">Usuario o correo</span
+              ><input class="input" name="clientEmail" required /></label
+            ><label class="full"
+              ><span class="field-label">Celular</span
+              ><input class="input" name="clientPhone" inputmode="tel" /></label
+            ><div class="full client-reset-password-row"
+              ><button type="button" class="secondary-btn" id="resetClientPasswordBtn">Restablecer contraseña</button
+              ><span class="client-reset-password-hint" id="resetClientPasswordHint"></span></div
+            ><label class="full client-codex-toggle"
+              ><span class="field-label">Permitir Codex</span
+              ><span class="codex-switch"><input type="checkbox" name="clientCodex" /><span class="codex-switch-track"><span class="codex-switch-thumb"></span></span></span></label
+            ><div class="full client-edit-period"
+              ><div class="client-edit-duration" role="group" aria-label="Editar vigencia"
+                ><button type="button" data-client-edit-duration="days" aria-pressed="true" class="selected"
+                  >Por días</button
+                ><button type="button" data-client-edit-duration="custom" aria-pressed="false"
+                  >Personalizado</button
+                ></div
+              ><label id="clientDaysField"
+                ><span class="field-label" id="clientDaysLabel">Días restantes</span
+                ><input class="input" name="clientDays" type="number" min="0" step="1" required /></label
+              ><div class="custom-calendar" id="editCustom" hidden
+                ><div class="calendar-host" id="editCalendar"></div
+                ><div class="range-summary" id="editRangeSummary"
+                  >Toca la fecha de inicio y después la fecha final.</div
+                ></div
+              ></div
+            ></div
+          ><div class="dialog-actions"
+            ><button class="secondary-btn" type="button" data-close="#clientEditBackdrop">Cancelar</button
+            ><button class="primary-btn" type="submit">Guardar cambios</button></div
+          ></form
+        ></section
+      ></div
+    >
+    <div class="modal-backdrop" id="myProfileBackdrop" hidden>
+      <section
+        class="dialog compact my-profile-dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="myProfileTitle"
+      >
+        <header class="dialog-head"
+          ><div><h2 id="myProfileTitle">Mi perfil</h2><p id="myProfileRole"></p></div
+          ><button class="close-btn" type="button" data-close="#myProfileBackdrop" aria-label="Cerrar"
+            >×</button
+          ></header
+        >
+        <form id="myProfileForm">
+          <label
+            ><span class="field-label">Nombre</span
+            ><input class="input" id="myProfileName" autocomplete="name" maxlength="80" required
+          /></label>
+          <label
+            ><span class="field-label">Usuario de acceso</span
+            ><input
+              class="input"
+              id="myProfileUsername"
+              autocomplete="username"
+              autocapitalize="none"
+              spellcheck="false"
+              maxlength="120"
+              required
+          /></label>
+          <label
+            ><span class="field-label">Nueva contraseña</span
+            ><span class="profile-password-wrap"
+              ><input
+                class="input"
+                id="myProfilePassword"
+                type="password"
+                autocomplete="new-password"
+                minlength="4"
+                placeholder="Dejar vacío para conservar" /><button
+                type="button"
+                class="profile-password-eye"
+                id="myProfilePasswordEye"
+                aria-label="Mostrar contraseña"
+                aria-pressed="false"
+                ><svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z" />
+                  <circle cx="12" cy="12" r="3" />
+                  <path class="password-eye-slash" d="m3 3 18 18" /></svg></button></span
+          ></label>
+          <p class="profile-form-message" id="myProfileMessage" role="status" aria-live="polite" hidden></p>
+          <div class="dialog-actions"
+            ><button class="primary-btn" id="myProfileSave" type="submit">Guardar cambios</button></div
+          >
+        </form>
+      </section>
+    </div>
+    <div class="modal-backdrop" id="settingsBackdrop" hidden
+      ><section class="dialog compact" role="dialog" aria-modal="true"
+        ><header class="dialog-head"
+          ><div><div class="dialog-kicker">PREFERENCIAS</div><h2>Ajustes del panel</h2></div
+          ><button class="close-btn" data-close="#settingsBackdrop" aria-label="Cerrar">×</button></header
+        ><form id="settingsForm"
+          ><label
+            ><span class="field-label">Nombre del administrador</span
+            ><input class="input" id="adminNameInput" required /></label
+          ><div class="dialog-actions"
+            ><button class="secondary-btn" type="button" data-close="#settingsBackdrop">Cancelar</button
+            ><button class="primary-btn" type="submit">Guardar</button></div
+          ></form
+        ></section
+      ></div
+    >
+    <div class="modal-backdrop" id="logoutBackdrop" hidden
+      ><section class="dialog compact" role="dialog" aria-modal="true" aria-labelledby="logoutTitle"
+        ><header class="dialog-head"
+          ><div
+            ><div class="dialog-kicker">SESIÓN</div><h2 id="logoutTitle">¿Cerrar sesión?</h2
+            ><p>Volverás a la pantalla de acceso.</p></div
+          ><button class="close-btn" data-close="#logoutBackdrop" aria-label="Cerrar">×</button></header
+        ><div class="dialog-actions"
+          ><button class="secondary-btn" type="button" data-close="#logoutBackdrop">Cancelar</button
+          ><button class="primary-btn" id="confirmLogout" type="button">Cerrar sesión</button></div
+        ></section
+      ></div
+    >
+    <div class="modal-backdrop" id="setupBiometricBackdrop" hidden
+      ><section class="dialog compact" role="dialog" aria-modal="true"
+        ><header class="dialog-head"
+          ><div
+            ><div class="dialog-kicker">ACCESO RÁPIDO</div><h2>Activa la huella</h2
+            ><p>Usa la seguridad de este dispositivo para ingresar la próxima vez.</p></div
+          ><button class="close-btn" data-close="#setupBiometricBackdrop" aria-label="Cerrar"
+            >×</button
+          ></header
+        ><div class="dialog-actions"
+          ><button class="secondary-btn" data-close="#setupBiometricBackdrop">Más tarde</button
+          ><button class="primary-btn" id="enrollBiometric" type="button">Activar huella</button></div
+        ></section
+      ></div
+    >
+    <div class="modal-backdrop" id="renewBackdrop" hidden
+      ><section class="dialog" role="dialog" aria-modal="true"
+        ><header class="dialog-head"
+          ><div
+            ><div class="dialog-kicker">RENOVACIÓN</div
+            ><span class="renew-license-badge" id="renewLicenseName"></span><h2>Renovar usuario</h2
+            ><p id="renewUserName"></p></div
+          ><button class="close-btn" data-close="#renewBackdrop" aria-label="Cerrar">×</button></header
+        ><div class="field-label">Elige la nueva duración</div
+        ><div class="duration-options"
+          ><button class="duration-option selected" type="button" data-renew-duration="month1">Un mes</button
+          ><button class="duration-option" type="button" data-renew-duration="month2">Dos meses</button
+          ><button class="duration-option" type="button" data-renew-duration="custom"
+            >Personalizado</button
+          ></div
+        ><div class="custom-calendar" id="renewCustom" hidden
+          ><div class="calendar-host" id="renewCalendar"></div
+          ><div class="range-summary" id="renewRangeSummary"
+            >Toca la fecha de inicio y después la fecha final.</div
+          ></div
+        ><div class="dialog-actions"
+          ><button class="secondary-btn" data-close="#renewBackdrop">Cancelar</button
+          ><button class="primary-btn" id="confirmRenew">Renovar</button></div
+        ></section
+      ></div
+    >
+    <div class="modal-backdrop" id="migrateBackdrop" hidden
+      ><section class="dialog compact" role="dialog" aria-modal="true"
+        ><header class="dialog-head"
+          ><div
+            ><div class="dialog-kicker">MIGRACIÓN</div><h2 id="migrateLicenseName">ChatGPT</h2
+            ><p>Selecciona la cuenta para <strong id="migrateUserName"></strong></p></div
+          ><button class="close-btn" data-close="#migrateBackdrop" aria-label="Cerrar">×</button></header
+        ><div class="account-options" id="migrateAccounts"></div
+        ><div class="migration-stage" id="migrationStage" hidden role="status" aria-live="polite"
+          ><span class="migration-eyebrow">MIGRACIÓN EN CURSO</span
+          ><h2 class="migration-title">Moviendo acceso</h2
+          ><span class="migration-person" data-migration-person></span
+          ><div class="migration-flow"
+            ><span class="migration-node"><small>ORIGEN</small><strong data-migration-from></strong></span
+            ><span class="migration-route" aria-hidden="true"
+              ><span class="migration-route-line"></span
+              ><span class="migration-packets"><i></i><i></i><i></i><i></i></span></span
+            ><span class="migration-node destination"
+              ><small>DESTINO</small><strong data-migration-to></strong></span></div
+          ><span class="migration-meter" aria-hidden="true"><i></i></span
+          ><div class="migration-steps" aria-hidden="true"
+            ><span>Preparando</span><span>Transfiriendo</span><span>Confirmando</span></div
+          ><span class="migration-caption" data-migration-caption>Preparando transferencia…</span></div
+        ><div class="dialog-actions"
+          ><button class="secondary-btn" data-close="#migrateBackdrop">Cancelar</button
+          ><button class="primary-btn" id="confirmMigrate">Migrar</button></div
+        ></section
+      ></div
+    >
+    <div class="modal-backdrop" id="deleteBackdrop" hidden
+      ><section class="dialog compact" role="dialog" aria-modal="true"
+        ><header class="dialog-head"
+          ><div
+            ><div class="dialog-kicker danger-text">ELIMINAR USUARIO</div><h2>¿Deseas borrar este usuario?</h2
+            ><p id="deleteUserName"></p></div
+          ><button class="close-btn" data-close="#deleteBackdrop" aria-label="Cerrar">×</button></header
+        ><p class="confirm-copy">Esta acción quitará el usuario de esta licencia.</p
+        ><div class="dialog-actions"
+          ><button class="secondary-btn" data-close="#deleteBackdrop">Cancelar</button
+          ><button class="danger-btn" id="confirmDelete">Sí, borrar</button></div
+        ></section
+      ></div
+    >
+    <div class="modal-backdrop" id="licenseBackdrop" hidden
+      ><section class="dialog compact" role="dialog" aria-modal="true"
+        ><header class="dialog-head"
+          ><div
+            ><div class="dialog-kicker" id="licenseKicker">NUEVA LICENCIA</div
+            ><h2 id="licenseTitle">Crear licencia</h2></div
+          ><button class="close-btn" data-close="#licenseBackdrop" aria-label="Cerrar">×</button></header
+        ><form id="licenseForm"
+          ><label
+            ><span class="field-label">Nombre de la licencia</span
+            ><input class="input" id="licenseNameInput" placeholder="Ej. Canva" required /></label
+          ><div class="palette-heading"
+            ><span class="field-label">Color de la licencia</span
+            ><span id="licenseColorValue">#4285F4</span></div
+          ><div class="color-palette" id="colorPalette" role="group" aria-label="Colores sugeridos"></div
+          ><label class="custom-color"
+            ><span>Personalizar color</span
+            ><input
+              id="licenseColorInput"
+              type="color"
+              value="#4285f4"
+              aria-label="Elegir un color personalizado"
+            /><span class="custom-color-chevron">›</span></label
+          ><div class="license-preview" id="licensePreview"
+            ><span class="preview-dot"></span><span id="licensePreviewText">Nueva licencia</span
+            ><small>Vista previa</small></div
+          ><div class="license-delete-section" id="licenseDeleteSection" hidden
+            ><button class="delete-license-link" id="deleteLicenseBtn" type="button">Eliminar licencia</button
+            ><small id="licenseDeleteHint"></small></div
+          ><div class="dialog-actions"
+            ><button class="secondary-btn" type="button" data-close="#licenseBackdrop">Cancelar</button
+            ><button class="primary-btn" id="licenseSubmit" type="submit">Crear licencia</button></div
+          ></form
+        ></section
+      ></div
+    >
+    <div class="modal-backdrop" id="deleteMasterBackdrop" hidden>
+      <section class="dialog compact" role="dialog" aria-modal="true" aria-labelledby="deleteMasterTitle" aria-describedby="deleteMasterMessage">
+        <header class="dialog-head">
+          <div><div class="dialog-kicker danger-text">ELIMINAR CUENTA</div><h2 id="deleteMasterTitle">¿Eliminar cuenta?</h2><p id="deleteMasterName"></p></div>
+          <button class="close-btn" type="button" data-close="#deleteMasterBackdrop" aria-label="Cerrar">×</button>
+        </header>
+        <p class="confirm-copy" id="deleteMasterMessage"></p>
+        <div class="dialog-actions">
+          <button class="secondary-btn" type="button" data-close="#deleteMasterBackdrop">Cancelar</button>
+          <button class="danger-btn" type="button" id="confirmDeleteMaster">Eliminar cuenta</button>
+        </div>
+      </section>
+    </div>
+    <div class="modal-backdrop" id="deleteLicenseBackdrop" hidden
+      ><section class="dialog compact" role="dialog" aria-modal="true"
+        ><header class="dialog-head"
+          ><div
+            ><div class="dialog-kicker danger-text">ELIMINAR LICENCIA</div
+            ><h2>¿Eliminar <span id="deleteLicenseName"></span>?</h2><p id="deleteLicenseWarning"></p></div
+          ><button class="close-btn" data-close="#deleteLicenseBackdrop" aria-label="Cerrar"
+            >×</button
+          ></header
+        ><div class="dialog-actions"
+          ><button class="secondary-btn" data-close="#deleteLicenseBackdrop">Cancelar</button
+          ><button class="danger-btn" id="confirmDeleteLicense" type="button">Eliminar licencia</button></div
+        ></section
+      ></div
+    >
+
+    <div class="modal-backdrop" id="suspendBackdrop" hidden
+      ><section class="dialog compact" role="dialog" aria-modal="true"
+        ><header class="dialog-head"
+          ><div
+            ><div class="dialog-kicker" id="suspendKicker">SUSPENDER ACCESO</div
+            ><h2 id="suspendTitle">¿Suspender a este usuario?</h2><p id="suspendUserName"></p></div
+          ><button class="close-btn" data-close="#suspendBackdrop" aria-label="Cerrar">×</button></header
+        ><p class="confirm-copy" id="suspendMessage">El acceso quedará suspendido en este panel.</p
+        ><div class="dialog-actions"
+          ><button class="secondary-btn" data-close="#suspendBackdrop">Cancelar</button
+          ><button class="primary-btn" id="confirmSuspend">Suspender</button></div
+        ></section
+      ></div
+    >
+    <div class="modal-backdrop scan-backdrop" id="scanBackdrop" hidden
+      ><section class="dialog scan-dialog" role="dialog" aria-modal="true" aria-labelledby="scanTitle"
+        ><header class="dialog-head"
+          ><div
+            ><div class="dialog-kicker">LECTURA DE CAPTURA</div><h2 id="scanTitle">Detectar número</h2
+            ><p>Busca el celular debajo de la foto del contacto.</p></div
+          ><button class="close-btn" id="scanClose" type="button" aria-label="Cerrar">×</button></header
+        ><div class="scan-viewport" id="scanViewport"
+          ><img id="scanPreview" alt="Captura seleccionada" /><div class="scan-line"></div
+          ><div class="scan-target"></div></div
+        ><div class="scan-progress"
+          ><span id="scanStatus">Preparando imagen…</span><strong id="scanPercent">0%</strong></div
+        ><div class="scan-progress-track"><i id="scanProgressBar"></i></div
+        ><div class="scan-candidates" id="scanCandidates" hidden></div
+        ><p class="scan-hint" id="scanHint"
+          >Lectura local disponible sin conexión. La primera captura puede tardar unos segundos.</p
+        ><div class="dialog-actions scan-actions"
+          ><button class="secondary-btn" id="scanRetry" type="button">Elegir otra imagen</button
+          ><button class="primary-btn" id="scanManual" type="button">Ingresar manualmente</button></div
+        ></section
+      ></div
+    >
+    <div class="modal-backdrop" id="staffCreateBackdrop" hidden
+      ><section class="dialog staff-dialog" role="dialog" aria-modal="true" aria-labelledby="staffCreateTitle"
+        ><header class="dialog-head"
+          ><div><div class="dialog-kicker">EQUIPO NOVA</div><h2 id="staffCreateTitle">Nuevo usuario</h2></div
+          ><button class="close-btn" data-close="#staffCreateBackdrop" aria-label="Cerrar">×</button></header
+        ><form id="staffForm"
+          ><div class="staff-form-top"
+            ><label
+              ><span class="field-label">Usuario</span
+              ><input
+                class="input"
+                id="staffUsername"
+                type="text"
+                placeholder="Nombre de acceso"
+                autocomplete="off"
+                required /></label
+            ><label
+              ><span class="field-label">Contraseña</span
+              ><input
+                class="input"
+                id="staffPassword"
+                type="password"
+                minlength="4"
+                autocomplete="new-password"
+                required /></label
+            ><label
+              ><span class="field-label">Rol</span
+              ><div class="nova-select" data-select="staffRole"
+                ><select class="input native-select" id="staffRole"
+                  ><option value="seller">Vendedor</option
+                  ><option value="admin">Administrador</option></select
+                ><button
+                  class="nova-select-trigger"
+                  type="button"
+                  aria-label="Seleccionar rol"
+                  aria-haspopup="listbox"
+                  aria-expanded="false"
+                  ><span data-select-value>Vendedor</span
+                  ><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg></button
+                ><div class="nova-select-options" role="listbox" hidden></div></div></label></div
+          ><div class="staff-permission-title">Licencias para vender</div
+          ><div class="staff-license-picks" id="staffLicensePicks"></div
+          ><p class="staff-permission-hint" id="staffPermissionHint"
+            >Selecciona las licencias a las que tendrá acceso.</p
+          ><div class="dialog-actions staff-form-actions"
+            ><button
+              class="secondary-btn staff-copy"
+              type="button"
+              id="staffCopyCreate"
+              aria-label="Crear y copiar acceso"
+              title="Crear y copiar acceso"
+              ><svg viewBox="0 0 24 24">
+                <rect x="8" y="8" width="11" height="12" rx="2" />
+                <path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h2" /></svg></button
+            ><button class="primary-btn" type="submit">Generar acceso ↗</button></div
+          ></form
+        ></section
+      ></div
+    >
+    <div class="modal-backdrop" id="staffConfirmBackdrop" hidden
+      ><section class="dialog compact" role="dialog" aria-modal="true"
+        ><header class="dialog-head"
+          ><div
+            ><div class="dialog-kicker" id="staffConfirmKicker">USUARIO</div><h2 id="staffConfirmTitle"></h2
+            ><p id="staffConfirmName"></p></div
+          ><button class="close-btn" data-close="#staffConfirmBackdrop" aria-label="Cerrar">×</button></header
+        ><div class="dialog-actions"
+          ><button class="secondary-btn" data-close="#staffConfirmBackdrop">Cancelar</button
+          ><button class="primary-btn" id="staffConfirmAction" type="button">Confirmar</button></div
+        ></section
+      ></div
+    >
+    <div class="modal-backdrop" id="masterEditBackdrop" hidden
+      ><section class="dialog master-dialog" role="dialog" aria-modal="true" aria-labelledby="masterEditTitle"
+        ><header class="dialog-head"
+          ><div
+            ><div class="dialog-kicker" id="masterEditKicker">CUENTA MAESTRA</div
+            ><h2 id="masterEditTitle">Conectar cuenta</h2><p id="masterEditSub"></p></div
+          ><button class="close-btn" data-close="#masterEditBackdrop" aria-label="Cerrar">×</button></header
+        ><form id="masterForm"
+          ><div class="master-form-grid"
+            ><label
+              ><span class="field-label">Correo o usuario</span
+              ><input
+                class="input"
+                id="masterEmail"
+                type="text"
+                placeholder="Cuenta de acceso"
+                required /></label
+            ><label
+              ><span class="field-label">Contraseña</span
+              ><span class="password-wrap"
+                ><input
+                  class="input"
+                  id="masterPassword"
+                  type="password"
+                  placeholder="Contraseña"
+                  autocomplete="new-password"
+                  required /><button
+                  class="password-eye"
+                  type="button"
+                  data-reveal="masterPassword"
+                  aria-label="Mostrar contraseña"
+                  ><svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z" />
+                    <circle cx="12" cy="12" r="3" /></svg></button></span></label
+            ><label class="span-all"
+              ><span class="field-label">Semilla del autenticador / token</span
+              ><span class="password-wrap"
+                ><input
+                  class="input"
+                  id="masterSeed"
+                  type="password"
+                  placeholder="Semilla o token"
+                  autocomplete="off" /><button
+                  class="password-eye"
+                  type="button"
+                  data-reveal="masterSeed"
+                  aria-label="Mostrar semilla"
+                  ><svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z" />
+                    <circle cx="12" cy="12" r="3" /></svg></button></span></label
+            ><div class="span-all"
+              ><span class="field-label">Duración</span
+              ><div class="master-duration-options" id="masterDurationOptions"
+                ><button type="button" data-master-duration="month1" class="selected" aria-pressed="true"
+                  >Un mes</button
+                ><button type="button" data-master-duration="custom" aria-pressed="false"
+                  >Personalizado</button
+                ></div
+              ></div
+            ><div class="span-all custom-dates" id="masterCustom" hidden
+              ><div class="calendar-host" id="masterCalendar"></div
+              ><div class="range-summary" id="masterRangeSummary"
+                >Toca la fecha de inicio y después la fecha final.</div
+              ></div
+            ><label class="span-all"
+              ><span class="field-label">Nota</span
+              ><textarea
+                class="input master-note-input"
+                id="masterNote"
+                rows="3"
+                placeholder="Añade una nota..."
+              ></textarea></label></div
+          ><div class="dialog-actions"
+            ><button class="primary-btn master-save-btn" type="submit" id="masterSave"
+              >Conectar cuenta ↗</button
+            ></div
+          ></form
+        ></section
+      ></div
+    >
+    <div class="creation-success" id="creationSuccess" hidden
+      ><div class="success-bloom"><span>✓</span></div
+      ><strong>Acceso creado</strong><small>Listo en tu panel</small></div
+    ><span
+      class="clipboard-live"
+      id="clientClipboardStatus"
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
+    ></span
+    ><div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true"></div>
+    <!-- Offline OCR: Tesseract.js and tesseract.js-core (Apache-2.0); English language model (Apache-2.0). Bundled for local operation. -->
+    <!-- OCR resources are in vendor/ocr/. -->
+    <script src="vendor/ocr/tesseract.js"></script>
+    <script src="js/01-panel.js?v=migfix01"></script>
+    <script src="js/02-theme-controls.js?v=00cf83e7e113"></script>
+    <script src="js/03-refresh.js?v=f5e84e50760c"></script>
+    <script src="js/04-clipboard.js?v=8da04aad815b"></script>
+    <div class="modal-backdrop" id="bulkMigrateBackdrop" hidden>
+      <section class="dialog bulk-dialog" role="dialog" aria-modal="true" aria-labelledby="bulkMigrateTitle">
+        <header class="dialog-head"
+          ><div><h2 id="bulkMigrateTitle">Migrador masivo</h2><p id="bulkLicenseName"></p></div
+          ><button class="close-btn" type="button" data-close="#bulkMigrateBackdrop" aria-label="Cerrar"
+            >×</button
+          ></header
+        >
+        <div class="bulk-job-panel" id="bulkJobPanel" hidden></div>
+        <form id="bulkMigrateForm">
+          <label
+            ><span class="field-label">Cuenta de destino</span
+            ><div class="nova-select" data-select="bulkDestination"
+              ><select
+                class="input native-select"
+                id="bulkDestination"
+                aria-label="Cuenta de destino"
+              ></select
+              ><button
+                class="nova-select-trigger"
+                type="button"
+                aria-label="Seleccionar cuenta de destino"
+                aria-haspopup="listbox"
+                aria-expanded="false"
+                ><span data-select-value>Seleccionar cuenta</span
+                ><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg></button
+              ><div class="nova-select-options" role="listbox" hidden></div></div
+          ></label>
+          <div class="bulk-modes" role="group" aria-label="Modo de migración"
+            ><button type="button" data-bulk-mode="now" class="selected" aria-pressed="true">Ahora</button
+            ><button type="button" data-bulk-mode="timer" aria-pressed="false"
+              ><svg viewBox="0 0 24 24" aria-hidden="true">
+                <circle cx="12" cy="13" r="8" />
+                <path d="M12 9v5l3 2M9 2h6m-3 0v3" /></svg
+              >5 cada 20 min</button
+            ></div
+          >
+          <p class="bulk-mode-hint" id="bulkModeHint">Se migrarán juntos los clientes seleccionados.</p>
+          <label class="bulk-search"
+            ><svg viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="10" cy="10" r="6" />
+              <path d="m15 15 5 5" /></svg
+            ><input id="bulkSearch" type="search" placeholder="Buscar cliente" autocomplete="off"
+          /></label>
+          <label class="bulk-select-all"
+            ><input type="checkbox" id="bulkSelectAll" /><span>Seleccionar todos</span
+            ><small id="bulkSelectedCount"></small
+          ></label>
+          <div class="bulk-client-list" id="bulkClientList"></div>
+          <p class="bulk-timer-note" id="bulkTimerNote" hidden
+            >Primera tanda al iniciar. Después, cinco cada 20 minutos con el panel abierto. Si lo cierras, la
+            cola se conserva y se retoma al volver, sin acumular tandas.</p
+          >
+          <div class="dialog-actions"
+            ><button class="primary-btn" type="submit" id="bulkStartBtn">Migrar seleccionados</button></div
+          >
+        </form>
+        <div class="bulk-run-stage" id="bulkRunStage" role="status" aria-live="polite" hidden
+          ><span class="bulk-transfer-art" aria-hidden="true"
+            ><span class="bulk-source-stack"
+              ><i
+                ><svg viewBox="0 0 24 24">
+                  <circle cx="12" cy="8" r="3" />
+                  <path d="M5 20v-1a7 7 0 0 1 14 0v1" /></svg></i
+              ><i
+                ><svg viewBox="0 0 24 24">
+                  <circle cx="12" cy="8" r="3" />
+                  <path d="M5 20v-1a7 7 0 0 1 14 0v1" /></svg></i
+              ><i
+                ><svg viewBox="0 0 24 24">
+                  <circle cx="12" cy="8" r="3" />
+                  <path d="M5 20v-1a7 7 0 0 1 14 0v1" /></svg></i></span
+            ><span class="bulk-transfer-lanes"><i></i><i></i><i></i><i></i></span
+            ><span class="bulk-target-node"
+              ><svg viewBox="0 0 24 24">
+                <rect x="3" y="4" width="18" height="16" rx="3" />
+                <path d="M3 9h18m-12 6h6" /></svg></span
+            ><span class="bulk-success-mark"
+              ><svg viewBox="0 0 24 24"><path d="m5 12 4 4 10-10" /></svg></span></span
+          ><strong id="bulkRunTitle">Migrando accesos</strong><span id="bulkRunCaption"></span
+          ><div class="bulk-progress-header"
+            ><span id="bulkRunPhase">Preparando la transferencia…</span
+            ><strong id="bulkRunCounter">0 de 0</strong></div
+          ><span class="bulk-run-track" aria-hidden="true"><i></i></span
+          ><span class="bulk-stage-detail">Los cambios se confirman al terminar.</span></div
+        >
+      </section>
+    </div>
+    <script src="js/05-panel-motion.js?v=1cd94a479bd7"></script>
+    <script src="js/06-bulk-migration.js?v=bdc6e6e44311"></script>
+    <script src="js/07-profile.js?v=76ece0ab69bd"></script>
+    <script src="js/08-login-motion.js?v=72b22bce6bbf"></script>
+    <script src="js/09-client-editor.js?v=ee76dfaf6958"></script>
+    <script src="js/10-select-controls.js?v=8a2b90c36f33"></script>
+    <script src="js/11-motion-system.js?v=c4f03ab75e4a"></script>
+    <script src="js/12-license-sorting.js?v=615fc0cd5b38"></script>
+    <script src="js/13-statistics.js?v=73176d9da529"></script>
+    <script src="js/14-supabase.js?v=c9bef703ed19"></script>
+    <script src="js/15-sync-actions-migfix.js?v=1"></script>
+    <script src="js/16-compat-sync.js?v=55c7a6c6ef83"></script>
+    <script src="js/17-modal-feedback.js?v=d0fc1b6678c9"></script>
+      <script src="js/18-connected-motion.js?v=fc2e280cb83b"></script>
+  </body>
+</html>

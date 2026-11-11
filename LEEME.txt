@@ -1,0 +1,53 @@
+ULTRASHOP — PANEL ACTUALIZADO, VERSIÓN 8
+
+Extrae todo el ZIP conservando las carpetas.
+Para activar la sincronización completa lee primero ACTIVAR_SINCRONIZACION.txt.
+La web detecta si el servidor todavía usa la API anterior: vuelve a cargar
+clientes y cuentas sin el error «Acción no implementada: panel_sync».
+Para sincronizar TODOS los apartados necesitas también el SQL y las funciones
+del servidor incluidos. Los cambios que la API anterior no admite muestran
+un aviso; no se presentan como guardados.
+
+Se conserva el diseño, la tipografía, los temas, animaciones y carga progresiva.
+Los cambios confirmados en la base actualizan las vistas del panel.
+La sincronización y los controles de errores están en js/15-sync-actions.js.
+La compatibilidad con el servidor anterior está en js/16-compat-sync.js.
+La API existente y su ADMIN_TOKEN se conservan; se añaden rutas de sincronización.
+
+ABRIR LOCALMENTE
+  python -m http.server 8000
+  Después abre http://localhost:8000
+Sin configurar Supabase funciona el modo de demostración local existente.
+Usuario de demostración local: victor1234 / contraseña: 1234.
+Con la API anterior puedes seguir usando el administrador local original:
+se conserva su usuario y su contraseña, y se comprueba el ADMIN_TOKEN contra
+el servidor antes de entrar. No se permite entrar por esa vía si el servidor
+no responde o rechaza el token. No se recuperan contraseñas del personal.
+Con el servidor actualizado se usan las credenciales reales de la tabla usuarios.
+
+MODIFICAR LOS ESTILOS
+Edita css/styles.css y ejecuta:
+  python3 tools/generar_estilos.py
+  python3 tools/versionar_recursos.py
+Se regeneran panel.css, statistics.css y el bloque de marca de index.html.
+El segundo comando cambia las referencias de recursos para evitar mezclar
+archivos antiguos guardados en la caché con una versión nueva.
+
+Los scripts clásicos comparten variables; conserva su orden en index.html.
+assets/ conserva imágenes y fuentes; vendor/ocr/ conserva el lector local.
+La huella y el portapapeles dependen de los permisos del navegador.
+
+BOTONES DE LOS MODALES — VERSIÓN 8
+Los resultados y errores se muestran también dentro del modal. Mientras se
+procesa una acción aparece Guardando/Eliminando; al terminar se liberan los
+botones. Las consultas que no responden dejan de bloquear el panel después
+de 30 segundos. Un timeout no confirma ni deshace una escritura: hay que
+actualizar para verificar el resultado antes de repetir una acción antigua.
+
+La URL puede ser la del proyecto, Functions o /functions/v1/admin; el panel
+la normaliza automáticamente. Publica TODOS los recursos y después index.html.
+Los botones que necesitan operaciones nuevas del servidor siguen necesitando
+ACTIVAR_SINCRONIZACION.txt. Un aviso visible no sustituye ese despliegue.
+
+ACTUALIZACIÓN: CONTRASEÑAS EN CLIENTES
+Columna después de Usuario, con ojo y ocultación por defecto. Las contraseñas remotas existentes no son recuperables desde su hash: muestran No disponible. Las creadas en esta pestaña se conservan solo en memoria hasta recargar o cerrar sesión, también al sincronizar. No cambia el esquema ni las funciones del servidor. Animaciones de cambios y soporte para movimiento reducido.

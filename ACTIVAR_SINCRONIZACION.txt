@@ -1,0 +1,171 @@
+ULTRASHOP — ACTIVAR LA SINCRONIZACIÓN COMPLETA (VERSIÓN 8)
+
+NOTA DE SEGURIDAD (29/10/2026)
+El panel ya no permite entrar con el propietario local victor1234/1234 en un
+sitio público, ni guarda el ADMIN_TOKEN en localStorage.
+
+ESTADO REAL DEL PROYECTO usrvoxlyyqrhrpnwobuq:
+- Las funciones obtener-sesion, verificar-estado, login y admin ya están
+  desplegadas con los parches de seguridad.
+- Las contraseñas de clientes y personal ya están guardadas con bcrypt.
+- anon y authenticated ya no tienen permisos sobre las tablas de public.
+- El ADMIN_TOKEN fue rotado. El valor nuevo está en
+  C:\Users\Salome\AppData\Local\Temp\opencode\TOKEN-ADMIN-PANEL.txt
+  Guárdalo en tu gestor de contraseñas y borra ese archivo. El token anterior
+  ya no funciona.
+
+LO QUE SIGUE PENDIENTE:
+- _shared/access-window.ts sigue sin existir (no bloquea el uso actual).
+- panel_sync, panel_action y panel_operation ya están implementados y desplegados.
+
+Lee PENDIENTE_SERVIDOR.md para el detalle completo y el orden recomendado.
+
+SI APARECE «ACCIÓN NO IMPLEMENTADA: panel_sync»
+Tu servidor todavía tiene la API anterior. Publica todos los archivos web de
+esta versión 8 y recarga: se detecta esa respuesta concreta y se usan las
+consultas existentes. No se ocultan errores de contraseña, conexión o SQL.
+
+Mientras uses la API anterior:
+- Se cargan clientes y cuentas. Cada cambio compatible vuelve a descargarlos.
+- Funcionan creación de clientes con duración relativa, edición de usuario y
+  celular, renovación por días, suspensión/reactivación y cambio de cuenta.
+- Al crear, el servidor antiguo primero asigna su cuenta predeterminada;
+  después se aplica la elegida y se comprueba el resultado. Si falla, se avisa
+  de la creación parcial. No se reintenta automáticamente ni se duplica.
+- Se pueden crear/editar credenciales y notas de cuentas y cambiar su estado;
+  la vigencia permanece en la modalidad antigua de un mes desde fecha_alta.
+- Pruebas por minutos, fechas de inicio personalizadas, vigencias de cuentas,
+  borrar clientes, cerrar su sesión, gestionar licencias/personal/perfil y
+  migraciones por lotes requieren instalar la actualización del servidor.
+- El tema se guarda solo en este dispositivo y el aviso lo indica.
+- Se conservan las limitaciones de datos y consultas de la API original;
+  no ofrece la atomicidad ni la prevención de conflictos del servidor nuevo.
+
+Después de actualizar el servidor, pulsa Actualizar o recarga el navegador:
+la web detectará la sincronización completa automáticamente.
+
+ACCESO DEL ADMINISTRADOR ORIGINAL (OBSOLETO)
+Esta compatibilidad se eliminó por seguridad. Un panel conectado a Supabase
+solo entra con usuarios de la tabla usuarios. victor1234/1234 queda únicamente
+para el modo de demostración en localhost o al abrir el archivo directamente.
+
+Antes de activar la API nueva, comprueba que tienes un administrador y una
+contraseña válidos en la tabla usuarios. El administrador local no se crea
+ni se convierte en un usuario de la base automáticamente.
+
+INSTALACIÓN, EN ESTE ORDEN
+1. En el proyecto Supabase que ya usa UltraShop, abre SQL Editor y ejecuta:
+      supabase/setup/sincronizacion_panel.sql
+   Usa la base existente con clientes, suscripciones, cuentas_maestras,
+   productos y usuarios. El script comprueba que esas tablas existen.
+   Añade dos tablas privadas, un índice y funciones de sincronización;
+   no borra las tablas ni los datos existentes. Se puede ejecutar otra vez.
+
+2. Actualiza estas tres Edge Functions con los archivos de este paquete:
+      admin/index.ts
+      admin/panel-sync.ts
+      login/index.ts
+      verificar-estado/index.ts
+      _shared/access-window.ts
+   IMPORTANTE: admin/panel-sync.ts y _shared/access-window.ts todavía no
+   existen. Sin ellos, panel_sync/panel_action seguirán sin funcionar y las
+   funciones desplegadas hoy no los necesitan para el login ni para el estado.
+   El archivo compartido debe incluirse al desplegar login y verificar-estado.
+   Mantén las variables de entorno existentes: SUPABASE_URL,
+   SUPABASE_SERVICE_ROLE_KEY y ADMIN_TOKEN. No pongas la service_role en la web.
+   Mantén la configuración de verificación JWT que utiliza cada función.
+   admin valida el ADMIN_TOKEN dentro de la función, como antes.
+
+   Si ya trabajas con Supabase CLI, desde la carpeta extraída:
+      supabase functions deploy admin --project-ref usrvoxlyyqrhrpnwobuq --use-api --no-verify-jwt
+      supabase functions deploy login --project-ref usrvoxlyyqrhrpnwobuq --use-api
+      supabase functions deploy verificar-estado --project-ref usrvoxlyyqrhrpnwobuq --use-api
+   En login y verificar-estado conserva las opciones de JWT de tu despliegue
+   actual; las líneas anteriores no presuponen que esté desactivado.
+   No uses los identificadores de otros proyectos.
+
+3. Publica los archivos de la web, incluyendo js/15-sync-actions.js
+   js/16-compat-sync.js y js/17-modal-feedback.js.
+   Publica primero los recursos y al final index.html. Recarga el navegador.
+   Conserva la URL de Functions. El ADMIN_TOKEN cambió: usa el valor de
+   TOKEN-ADMIN-PANEL.txt (guárdalo antes de borrar el archivo).
+   Con la API nueva, el acceso se verifica con usuarios de la base, sin recurrir
+   a contraseñas locales cuando el servidor rechaza el inicio de sesión.
+
+4. Comprueba con un cliente de prueba: crear eligiendo Cuenta 2, editar,
+   renovar, suspender/reactivar, migrar y retirar de una licencia. Recarga
+   después para confirmar los datos. Verifica también personal y licencias.
+
+QUÉ SE SINCRONIZA CON EL SERVIDOR ACTUALIZADO
+- Clientes: creación con cuenta elegida en una sola transacción; edición de
+  usuario/celular/duración; pruebas; renovación; suspensión/reactivación;
+  cambio de cuenta y retirada de la licencia seleccionada.
+- Cuentas: creación, edición, credenciales, notas, vigencia y estado.
+- Licencias: nombres, colores, creación, orden y retirada compartida.
+- Personal: crear, editar, suspender/reactivar y eliminar; roles y licencias.
+- Perfil, nombre del administrador y tema por usuario.
+- Migraciones por lotes: cola, resultados, pausa, continuación y cancelación.
+- Estadísticas y exportaciones leen los datos confirmados.
+
+COMPORTAMIENTO CON EL SERVIDOR ACTUALIZADO
+Cada cambio se confirma en la base antes de actualizar las vistas y mostrar
+éxito. La creación guarda cliente y suscripción juntos; no asigna temporalmente
+otra cuenta. Las lecturas comparten una descarga y la respuesta incluye una
+vista coherente de todas las secciones, sin el límite de 1000 filas de select.
+Se actualiza al navegar, recuperar conexión/foco y cada 15 segundos con el
+panel visible. No se interrumpen formularios abiertos; sus referencias al
+cliente se conservan. Si otro panel cambió los datos, se pide revisarlos antes
+de guardar. Doble clic y reintentos de la misma operación no duplican cambios.
+
+Si una escritura se confirma y falla la recarga, se indica que el cambio YA
+está guardado. Actualizar vuelve a descargarlo; no repite la escritura.
+Si no se puede confirmar una operación por pérdida de conexión, reintenta la
+misma acción. Su identificador se conserva para evitar duplicados.
+Sin configurar Supabase se mantiene el modo local. Con Supabase configurado,
+una caída del servidor no se convierte en un guardado local falsamente exitoso.
+Copiar, buscar, filtrar, abrir/cerrar ventanas y usar el lector de imágenes son
+acciones de interfaz: no inventan escrituras de datos en la base.
+
+ALCANCE DE ELIMINAR
+Retirar un cliente de una licencia elimina su suscripción a esa licencia.
+Conserva la ficha de cliente y las demás suscripciones.
+Retirar una licencia la oculta en todos los paneles; conserva clientes y cuentas
+históricos en la base, como indica la confirmación.
+Al iniciar por primera vez se trasladan los nombres/colores/orden de licencias
+editados localmente. No se suben clientes, cuentas ni usuarios de demostración.
+
+MIGRACIONES PROGRAMADAS
+Las colas están guardadas en la base. Las tandas las ejecuta el panel abierto,
+con una sesión administradora activa. No es un servicio cron independiente:
+si cierras todos los paneles, la cola continúa cuando vuelvas a abrir uno.
+Si la cuenta destino deja de estar disponible, la cola queda en pausa.
+
+VERIFICACIÓN REALIZADA
+Pruebas con PostgreSQL local (PGlite) y Chromium usando el SQL incluido:
+creación, edición, cuenta seleccionada, renovación, estado, borrado por licencia,
+licencias/orden, cuentas, personal, perfil, lotes y recuperación tras recargar.
+También rollback, errores de red, respuesta perdida, idempotencia, conflicto
+entre sesiones, base vacía, permisos de las tablas nuevas, contraseña del
+personal y vencimiento exacto de pruebas. Sin errores JavaScript en esas pruebas.
+Interfaz revisada a 1440/1280, 390 y 320 px.
+No se ha validado contra el esquema, restricciones o red del proyecto real.
+Las consultas conservan los nombres de tablas/campos del código entregado.
+Si tu base difiere, deberá adaptarse y verificarse allí antes de usarla.
+
+VERSIÓN 6: comprobada también la respuesta exacta del servidor anterior,
+la carga compatible, la cuenta elegida al crear, las actualizaciones posteriores,
+el aviso de operaciones no admitidas y el paso automático al servidor nuevo.
+
+VERSIÓN 8: comprobados el acceso del propietario original, su contraseña
+personalizada, el rechazo con contraseña incorrecta/token inválido/sin conexión,
+el acceso remoto y la separación entre error de acceso y error de descarga.
+
+CORRECCIÓN DE INTERFAZ EN VERSIÓN 8
+Se detectó que el sistema de avisos ocultaba los mensajes que no contenían
+ciertas palabras, incluido el bloqueo por API antigua. Ahora se ven todos los
+resultados y el modal mantiene el aviso correspondiente. Se probaron clics
+reales en Guardar, Renovar, Suspender, Migrar, Eliminar, Cancelar y Cerrar con
+la API de prueba actualizada, y avisos/cancelación con la API antigua.
+
+Publica recursos antes de index.html. Las referencias llevan una huella de
+contenido para que el navegador descargue las versiones correctas.
