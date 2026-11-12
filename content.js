@@ -1390,6 +1390,7 @@
   let lastTriggerActionTimestamp = 0;
   let pendingOpenTimer = null;
   let isProgrammaticTriggerClick = false;
+  let allowManualEngineChange = false;
 
   // Supresión global defensiva contra colisiones internas de OverlayRef en Angular CDK
   window.addEventListener('error', (e) => {
@@ -1549,18 +1550,13 @@
       } catch (_) {}
     });
 
-    // Neutralizar cualquier backdrop que Angular haya dejado atrás
     clearOrphanCdkBackdrops();
     setTimeout(clearOrphanCdkBackdrops, 200);
-
     setTimeout(() => {
       isClosingFlowSettings = false;
     }, 150);
   }
 
-  // 🛡️ Un backdrop de Angular CDK huérfano (transparente) tapa toda la página
-  // y el usuario no puede hacer clic ni enfocar el prompt. Angular no siempre
-  // lo destruye porque la extensión oculta el pane manualmente con display:none.
   function clearOrphanCdkBackdrops() {
     if (!window.location.hostname.includes('flow.google.com') && !window.location.hostname.includes('labs.google')) return;
     try {
@@ -1655,9 +1651,7 @@
           pointer-events: auto !important;
         }
 
-        /* Backdrop de CDK: transparente SOLO mientras está realmente visible.
-           Un backdrop huérfano con pointer-events:auto queda invisible pero
-           bloquea TODA la página (incluido el campo de prompt). */
+        /* Backdrop de CDK: transparente SOLO mientras está realmente visible */
         .cdk-overlay-backdrop {
           background: transparent !important;
         }
@@ -1733,14 +1727,9 @@
           pointer-events: none !important;
         }
 
-        /* FIX: Garantizar que SOLO el área editable del prompt sea interactiva.
-           No usar "flow-prompt-box *": eso reactivaba overlays invisibles
-           internos que tapaban el campo de texto. */
+        /* FIX: Garantizar que el prompt de texto y todos sus controles sean siempre interactivos */
         flow-prompt-box,
-        flow-prompt-box rich-textarea,
-        flow-prompt-box rich-textarea *,
-        flow-prompt-box [contenteditable="true"],
-        flow-prompt-box [contenteditable="true"] * {
+        flow-prompt-box *:not(flow-prompt-box-settings):not(flow-prompt-box-settings *) {
           pointer-events: auto !important;
         }
 
@@ -1843,7 +1832,7 @@
   let wasBoxOpenOnPointerDown = false;
 
   document.addEventListener('pointerdown', (e) => {
-    if (isProgrammaticTriggerClick) return;
+    if (isProgrammaticTriggerClick || allowManualEngineChange) return;
     const trigger = findFlowSettingsTriggerButton();
     if (trigger && (trigger === e.target || trigger.contains(e.target))) {
       // 🔒 SIEMPRE bloquear la interacción con el selector de motor
@@ -1855,7 +1844,7 @@
   }, true);
 
   document.addEventListener('click', (e) => {
-    if (isProgrammaticTriggerClick) return;
+    if (isProgrammaticTriggerClick || allowManualEngineChange) return;
     const trigger = findFlowSettingsTriggerButton();
     if (trigger && (trigger === e.target || trigger.contains(e.target))) {
       // 🔒 SIEMPRE bloquear la apertura del menú de selección de motor
@@ -2462,11 +2451,15 @@
       'mat-button-toggle, .mat-button-toggle, button.mat-button-toggle-button, button[role="radio"], button'
     ));
 
-    const videoElement = candidates.find(el => {
+    let videoElement = candidates.find(el => {
       if (el.closest('.settings-summary, flow-prompt-box')) return false;
       const txt = (el.textContent || '').trim();
       return txt === 'Video' || txt.startsWith('Video') || (txt.includes('Video') && !txt.includes('·') && !txt.includes('720p'));
     });
+    // Fallback: si no se encuentra por texto, tomar el primer mat-button-toggle disponible
+    if (!videoElement) {
+      videoElement = candidates.find(el => !el.closest('.settings-summary, flow-prompt-box') && (el.tagName || '').toLowerCase().includes('toggle'));
+    }
 
     if (!videoElement) return false;
 
@@ -2517,25 +2510,12 @@
     if (userIsTypingInPrompt) return;
 
     // Solo operar dentro de proyectos de Google Flow (/project/<id>)
-    const projectId = getFlowProjectIdFromUrl();
-    if (!projectId) return;
+    const projectId = getFlowProjectIdFromUrl() || 'flow_general';
 
-    // FIX: Ya NO bloqueamos por "solo una vez". En cambio, verificamos si
-    // la caja de ajustes ya tiene el motor Lower Priority activo visualmente.
-    // Si lo tiene, no hacemos nada. Si NO lo tiene (o la caja está cerrada),
-    // ejecutamos la secuencia para asegurar el motor correcto.
-    const settingsBoxOpen = getActiveFlowSettingsBox();
-    if (settingsBoxOpen) {
-      // La caja está abierta: revisar si el motor Lower Priority ya está marcado
-      const allItems = Array.from(document.querySelectorAll(
-        '.mat-mdc-menu-panel [role="menuitem"], .cdk-overlay-pane [role="menuitem"], [role="menu"] [role="menuitem"], .mat-mdc-menu-item'
-      )).filter(el => !el.closest('header') && !el.closest('nav'));
-      const alreadySelected = allItems.some(item => {
-        const txt = (item.dataset.originalText || item.textContent || '').trim();
-        return (txt.includes('Lower Priority') || txt.includes('Ilimitado')) &&
-               (item.getAttribute('aria-checked') === 'true' || item.classList.contains('mat-mdc-menu-item-highlighted'));
-      });
-      if (alreadySelected) return; // Motor correcto ya activo, nada que hacer
+    // "Solo una vez": verificar si ya fue configurado en esta sesión para este proyecto
+    const storageKey = 'flow_auto_engine_configured_' + projectId;
+    if (configuredProjectsInSession.has(projectId) || sessionStorage.getItem(storageKey) === 'true') {
+      return;
     }
 
     // PASO 1 (1ra Imagen): Localizar el botón disparador de ajustes en la barra de prompts
@@ -2543,16 +2523,18 @@
     if (!triggerBtn) return;
 
     isAutoConfiguringEngine = true;
-    console.log('[Flow Engine] 🚀 Iniciando secuencia automatizada para proyecto:', projectId);
+    console.log('[Flow Engine] 🚀 Iniciando secuencia automatizada (1ra -> 2da -> 3ra Imagen) para proyecto:', projectId);
 
     // PASO 1 -> 2: Abrir la tarjeta de ajustes
     let settingsBox = getActiveFlowSettingsBox();
     if (!settingsBox) {
       // FIX: Solo abrir la tarjeta si el usuario NO tiene el prompt enfocado
       if (!isUserActivelyTyping()) {
+      isProgrammaticTriggerClick = true;
         try {
           clickElementFirmly(triggerBtn);
         } catch (_) {}
+      setTimeout(() => { isProgrammaticTriggerClick = false; }, 120);
       } else {
         // Si está escribiendo, cancelar y dejar para el próximo ciclo
         isAutoConfiguringEngine = false;
@@ -2658,7 +2640,10 @@
     };
 
     function finishAndClose() {
-      // Ya NO bloqueamos por "solo una vez" — solo actualizamos el nombre visual
+      // Registrar que ya fue configurado ("solo una vez")
+      configuredProjectsInSession.add(projectId);
+      sessionStorage.setItem(storageKey, 'true');
+
       // Actualizar nombre visual en UI externa
       selectedCustomModelName = "Veo 3.1 - Ilimitado";
       sessionStorage.setItem('flow_selected_model_name', selectedCustomModelName);
@@ -2698,7 +2683,6 @@
       try {
         closeFlowSettingsOverlay();
       } catch (_) {}
-      clearOrphanCdkBackdrops();
 
       // 3. Si la caja o el botón disparador persisten en estado abierto, forzar cierre
       setTimeout(() => {
@@ -2715,9 +2699,10 @@
             closeFlowSettingsOverlay();
           } catch (_) {}
         }
-        clearOrphanCdkBackdrops();
         isAutoConfiguringEngine = false;
-        console.log('[Flow Engine] ✅ Secuencia completada: Motor seleccionado, menús cerrados y listo para generar.');
+        allowManualEngineChange = true;
+        isAutoConfiguringEngine = false;
+        console.log('[Flow Engine] ✅ Secuencia completada: Motor seleccionado. Ahora puedes cambiar manualmente si lo deseas.');
       }, 150);
     }
 
@@ -2763,19 +2748,21 @@
   // ============================================================
   function enforceOneVideoPerGeneration() {
     if (!window.location.hostname.includes('flow.google.com') && !window.location.hostname.includes('labs.google')) return;
-    if (!isVideoModeActive()) return;
+    // Intentar activar el modo Video si no está activo
+    try {
+      const triggerBtn = findFlowSettingsTriggerButton();
+      if (triggerBtn) {
+        const box = getActiveFlowSettingsBox();
+        if (!box) { try { triggerBtn.click(); } catch (_) {} }
+      }
+    } catch (_) {}
 
     try {
-      // Solo actuar dentro de la caja de parámetros de Flow.
-      // Si no hay caja abierta, NO buscar en todo el documento: eso es lo
-      // que deshabilitaba el campo de prompt (y otros inputs) por error.
       const box = getActiveFlowSettingsBox() || document.querySelector('flow-prompt-box-settings, .settings-content-overlay');
       if (!box) return;
 
-      // Buscar inputs numéricos o sliders de cantidad de videos/clips
       const searchScope = box;
 
-      // Selector de cantidad de clips (input type number, range, mat-slider, etc.)
       const quantityInputs = searchScope.querySelectorAll(
         'input[type="number"], input[type="range"], mat-slider, [aria-label*="cantidad" i], [aria-label*="quantity" i], ' +
         '[aria-label*="clips" i], [aria-label*="number of" i], ' +
@@ -2787,68 +2774,80 @@
         const currentVal = parseFloat(input.value || input.getAttribute('aria-valuenow') || '1');
 
         if (tag === 'input') {
-          if (currentVal !== 1) {
-            // Forzar valor 1
+          if (currentVal > 2) {
             const nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value');
             if (nativeInputValueSetter && nativeInputValueSetter.set) {
-              nativeInputValueSetter.set.call(input, '1');
+              nativeInputValueSetter.set.call(input, '2');
             } else {
-              input.value = '1';
+              input.value = '2';
             }
             input.dispatchEvent(new Event('input', { bubbles: true }));
             input.dispatchEvent(new Event('change', { bubbles: true }));
           }
-          // Deshabilitar visualmente
-          input.setAttribute('disabled', 'true');
-          input.setAttribute('max', '1');
+          input.setAttribute('max', '2');
           input.setAttribute('min', '1');
-          input.style.setProperty('pointer-events', 'none', 'important');
-          input.style.setProperty('opacity', '0.6', 'important');
-          input.style.setProperty('cursor', 'not-allowed', 'important');
+          input.style.removeProperty('pointer-events');
+          input.style.removeProperty('cursor');
+          input.style.removeProperty('opacity');
         }
 
         if (tag === 'mat-slider' || input.getAttribute('role') === 'slider') {
           const ariaVal = parseFloat(input.getAttribute('aria-valuenow') || '1');
-          if (ariaVal !== 1) {
-            input.setAttribute('aria-valuenow', '1');
-            input.setAttribute('aria-valuetext', '1');
+          if (ariaVal > 2) {
+            input.setAttribute('aria-valuenow', '2');
+            input.setAttribute('aria-valuetext', '2');
           }
           input.setAttribute('aria-valuemin', '1');
-          input.setAttribute('aria-valuemax', '1');
-          input.style.setProperty('pointer-events', 'none', 'important');
-          input.style.setProperty('cursor', 'not-allowed', 'important');
-          input.style.setProperty('opacity', '0.6', 'important');
+          input.setAttribute('aria-valuemax', '2');
         }
       });
 
-      // Buscar botones "+" que incrementan la cantidad
       const allBtns = searchScope.querySelectorAll('button');
       allBtns.forEach(btn => {
         const lbl = (btn.getAttribute('aria-label') || btn.textContent || '').trim().toLowerCase();
-        const isIncrement = lbl === '+' || lbl === 'add' || lbl.includes('increase') || lbl.includes('incrementar') || lbl.includes('aumentar') ||
-                            btn.getAttribute('aria-label')?.includes('más') || btn.getAttribute('aria-label')?.includes('add clip');
-        if (isIncrement && btn.closest('flow-prompt-box-settings, .settings-content-overlay, [class*="quantity"], [class*="clip-count"]')) {
+        const isHighCount = lbl === 'x3' || lbl === 'x4' || lbl === '3' || lbl === '4' ||
+                            lbl.includes('x3') || lbl.includes('x4') ||
+                            lbl.includes('3 videos') || lbl.includes('4 videos') ||
+                            lbl.includes('3 clips') || lbl.includes('4 clips');
+        if (isHighCount) {
           btn.setAttribute('disabled', 'true');
           btn.style.setProperty('pointer-events', 'none', 'important');
-          btn.style.setProperty('opacity', '0.4', 'important');
+          btn.style.setProperty('opacity', '0.35', 'important');
           btn.style.setProperty('cursor', 'not-allowed', 'important');
+          return;
+        }
+        const isIncrement = lbl === '+' || lbl === 'add' || lbl.includes('increase') || lbl.includes('incrementar') || lbl.includes('aumentar') ||
+                            (btn.getAttribute('aria-label') || '').includes('más') || (btn.getAttribute('aria-label') || '').includes('add clip');
+        if (isIncrement) {
+          const qInput = searchScope.querySelector('input[type="number"], input[type="range"]');
+          const cur = qInput ? parseFloat(qInput.value || '1') : 1;
+          if (cur >= 2) {
+            btn.setAttribute('disabled', 'true');
+            btn.style.setProperty('pointer-events', 'none', 'important');
+            btn.style.setProperty('opacity', '0.4', 'important');
+            btn.style.setProperty('cursor', 'not-allowed', 'important');
+          } else {
+            btn.removeAttribute('disabled');
+            btn.style.removeProperty('pointer-events');
+            btn.style.removeProperty('opacity');
+            btn.style.removeProperty('cursor');
+          }
         }
       });
 
-      // Interceptar eventos de cambio de valor en el contenedor de parámetros
       if (box && !box.getAttribute('data-flow-video-limit')) {
-        box.setAttribute('data-flow-video-limit', '1');
+        box.setAttribute('data-flow-video-limit', '2');
         box.addEventListener('change', (e) => {
           const t = e.target;
           if (!t) return;
           const tag2 = (t.tagName || '').toLowerCase();
           if (tag2 === 'input' && (t.type === 'number' || t.type === 'range')) {
-            if (parseFloat(t.value) > 1) {
+            if (parseFloat(t.value) > 2) {
               setTimeout(() => {
                 try {
                   const setter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value');
-                  if (setter && setter.set) setter.set.call(t, '1');
-                  else t.value = '1';
+                  if (setter && setter.set) setter.set.call(t, '2');
+                  else t.value = '2';
                   t.dispatchEvent(new Event('input', { bubbles: true }));
                   t.dispatchEvent(new Event('change', { bubbles: true }));
                 } catch (_) {}
@@ -2867,8 +2866,9 @@
     applyModelNameToTrigger();
     triggerAutoSelectEngineSequence();
     autoDismissCreditErrorAndConfigure();
+        clearOrphanCdkBackdrops();
     enforceOneVideoPerGeneration(); // 🔒 Mantener 1 video por generación
-    clearOrphanCdkBackdrops();      // 🛡️ Evitar capa invisible que bloquea el prompt
+    clearOrphanCdkBackdrops();
   }, 800);
 
   // Inicialización única al cargar proyecto
@@ -3276,7 +3276,9 @@
       [data-test-id="temporary-chat-button"],
       [data-test-id="temp-chat-button"],
       [data-test-id="temporary-chat"],
-      button[aria-label*="chat temporal" i],
+       button[jslog*="274589"],
+       button:has(mat-icon[fonticon="gemini_chat_temp"]),
+       button[aria-label*="chat temporal" i],
       button[aria-label*="temporary chat" i],
       button[aria-label*="temp chat" i],
       a[aria-label*="chat temporal" i],
@@ -3694,14 +3696,13 @@
         pointer-events: none !important;
       }
 
-      /* FIX: Protección del área de prompt — solo el campo editable.
-         No reactivar todos los descendientes de flow-prompt-box porque los
-         overlays invisibles internos volverían a interceptar el clic. */
+      /* FIX: Protección del área de prompt — nunca bloquear el campo de texto del usuario */
       flow-prompt-box,
-      flow-prompt-box rich-textarea,
-      flow-prompt-box rich-textarea *,
-      flow-prompt-box [contenteditable="true"],
-      flow-prompt-box [contenteditable="true"] *,
+      flow-prompt-box *,
+      [class*="prompt-box"],
+      [class*="prompt-box"] *,
+      [class*="promptBox"],
+      [class*="promptBox"] *,
       rich-textarea,
       rich-textarea *,
       [contenteditable="true"],
@@ -4017,6 +4018,7 @@
       targetNodes.forEach(el => scanAndMaskNode(el));
 
       replaceAvatarBadge();
+      applyGeminiUltraLabel();
       cloneVeo31LiteMenuItems();
       // FIX: No modificar el DOM del motor mientras el usuario escribe
       if (!userIsTypingInPrompt) applyModelNameToTrigger();
@@ -4110,6 +4112,33 @@
     } catch (e) {
       return true;
     }
+  }
+
+  function applyGeminiUltraLabel() {
+    try {
+      document.querySelectorAll('.gemini-sidenav-text, span[class*="gemini-sidenav-text"]').forEach(el => {
+        const txt = (el.textContent || '').trim();
+        if (txt && txt.toLowerCase().includes('gemini') && !txt.toLowerCase().includes('ultra')) {
+          let replaced = false;
+          for (const node of Array.from(el.childNodes)) {
+            if (node.nodeType === Node.TEXT_NODE) {
+              const v = (node.nodeValue || '').trim();
+              if (v && v.toLowerCase().includes('gemini') && !v.toLowerCase().includes('ultra')) {
+                node.nodeValue = node.nodeValue.replace(/Gemini/i, 'Gemini Ultra');
+                replaced = true;
+                break;
+              }
+            }
+          }
+          if (!replaced) {
+            el.textContent = 'Gemini Ultra';
+          }
+        }
+        el.style.setProperty('white-space', 'nowrap', 'important');
+        el.style.setProperty('overflow', 'visible', 'important');
+        el.style.setProperty('max-width', 'none', 'important');
+      });
+    } catch (e) {}
   }
 
   async function calculateLiveTotp(secretSeed) {
