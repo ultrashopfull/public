@@ -1251,6 +1251,96 @@ function sellableAccounts(name) {
     ? list.filter((m) => m.enabled && !masterDays(m).expired && !masterDays(m).future).map((m) => m.number)
     : [1, 2, 3, 4];
 }
+
+// ═══════════════════════════════════════════════════════════════════════════
+// ✅ GENERADOR DE CONTRASEÑA: 3 números + 3 letras mayúsculas (6 caracteres)
+// ═══════════════════════════════════════════════════════════════════════════
+function generateClientPassword() {
+  const numbers = '0123456789';
+  const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+  // Función criptográficamente segura para obtener un entero aleatorio
+  function randomInt(max) {
+    try {
+      const buf = new Uint32Array(1);
+      crypto.getRandomValues(buf);
+      // Rechazar valores que introduzcan sesgo (para máxima aleatoriedad)
+      const limit = Math.floor(0xFFFFFFFF / max) * max;
+      let val = buf[0];
+      while (val >= limit) {
+        crypto.getRandomValues(buf);
+        val = buf[0];
+      }
+      return val % max;
+    } catch (e) {
+      return Math.floor(Math.random() * max);
+    }
+  }
+
+  const chars = [];
+  // 3 números
+  for (let i = 0; i < 3; i++) {
+    chars.push(numbers[randomInt(numbers.length)]);
+  }
+  // 3 letras mayúsculas
+  for (let i = 0; i < 3; i++) {
+    chars.push(letters[randomInt(letters.length)]);
+  }
+  // Mezclar el orden (Fisher-Yates)
+  for (let i = chars.length - 1; i > 0; i--) {
+    const j = randomInt(i + 1);
+    [chars[i], chars[j]] = [chars[j], chars[i]];
+  }
+
+  return chars.join('');
+}
+
+// Inyecta el botón "regenerar" al lado del campo de contraseña (solo una vez)
+function ensurePasswordRegenerateButton() {
+  if (document.getElementById('flow-regen-pass-btn')) return;
+  const passInput = document.getElementById('createPassword');
+  if (!passInput) return;
+
+  // Envolver el input en un contenedor flexible
+  const wrapper = document.createElement('div');
+  wrapper.style.cssText = 'display:flex;gap:8px;align-items:stretch;width:100%;';
+  passInput.parentNode.insertBefore(wrapper, passInput);
+  wrapper.appendChild(passInput);
+
+  const btn = document.createElement('button');
+  btn.type = 'button';
+  btn.id = 'flow-regen-pass-btn';
+  btn.title = 'Generar nueva contraseña';
+  btn.setAttribute('aria-label', 'Generar nueva contraseña');
+  btn.style.cssText = 'flex:none;width:44px;min-width:44px;border-radius:12px;border:1px solid var(--card-border);background:var(--card-bg);color:var(--text-main);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;';
+  btn.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>`;
+  btn.addEventListener('mouseenter', () => { btn.style.borderColor = 'var(--link-color)'; btn.style.color = 'var(--link-color)'; });
+  btn.addEventListener('mouseleave', () => { btn.style.borderColor = 'var(--card-border)'; btn.style.color = 'var(--text-main)'; });
+  btn.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    passInput.value = generateClientPassword();
+    passInput.dispatchEvent(new Event('input', { bubbles: true }));
+    // Animación breve
+    if (window.NovaMotion?.play) {
+      window.NovaMotion.play(passInput, [
+        { boxShadow: '0 0 0 3px var(--accent-soft)' },
+        { boxShadow: '0 0 0 0 transparent' }
+      ], { duration: 600 });
+    }
+  });
+
+  wrapper.appendChild(btn);
+}
+
+// Pre-llena el campo de contraseña si está vacío
+function prefillCreatePassword() {
+  const passInput = document.getElementById('createPassword');
+  if (passInput && !passInput.value) {
+    passInput.value = generateClientPassword();
+  }
+}
+
 function openCreate() {
   if(window.panelSync?.busy){toast("Espera a que termine el guardado");return;}
   if (creatingUser || !canSell(current)) return;
@@ -1269,7 +1359,13 @@ function openCreate() {
       return `<option value="${n}" data-master-id="${esc(master?._id || "")}">${esc(accountCaption(current, n))}</option>`;
     })
     .join("");
+
+  
   document.querySelector("#createForm").reset();
+
+    // ✅ Pre-llenar contraseña automática (3 números + 3 letras mayúsculas)
+  ensurePasswordRegenerateButton();
+  prefillCreatePassword();
   closeNovaSelect(document.querySelector('[data-select="createAccount"]'));
   syncNovaSelect("createAccount");
   document.querySelector("#createTrial").checked = false;
