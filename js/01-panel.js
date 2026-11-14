@@ -1438,25 +1438,62 @@ function prepareUser() {
     endDate: end.toISOString(),
   };
 }
+
 function invitationText(u, license = current) {
-  const now = new Date(),
-    left = getDaysLeft(u),
-    total = Math.max(1, Number(u.total) || 30),
-    start = u.startDate ? new Date(u.startDate) : addDays(now, -Math.max(0, total - left)),
-    end = u.endDate
-      ? new Date(u.endDate)
-      : u.isTrial && u.expiresAt
-        ? new Date(u.expiresAt)
-        : addDays(now, left),
-    dateStart = u.isTrial
-      ? new Intl.DateTimeFormat("es-BO", { dateStyle: "short", timeStyle: "short" }).format(start)
-      : formatDate(start),
-    dateEnd = u.isTrial
-      ? new Intl.DateTimeFormat("es-BO", { dateStyle: "short", timeStyle: "short" }).format(end)
-      : formatDate(end),
-    days = u.isTrial ? "1 hora" : `${total} días`;
-  return `LICENCIA ${license.toUpperCase()}\n\nUsuario: ${u.email}${u.phone ? `\nCelular: ${u.phone}` : ""}\nCuenta: ${u.account}\nInicio: ${dateStart}\nFinaliza: ${dateEnd}\nDuración: ${days}\n\nIngresa aquí: ${accessUrls[license] || "Consulta con Víctor el enlace de acceso."}\n\n¡Gracias por tu confianza!\n\nPolíticas de uso: acceso personal e intransferible. No compartas tus credenciales ni modifiques los datos de la cuenta. El servicio estará disponible durante el periodo indicado y puede suspenderse ante un uso indebido.`;
+  const now = new Date();
+  const left = getDaysLeft(u);
+  const total = Math.max(1, Number(u.total) || 30);
+  const end = u.endDate
+    ? new Date(u.endDate)
+    : u.isTrial && u.expiresAt
+      ? new Date(u.expiresAt)
+      : addDays(now, left);
+
+  // Formato de fecha: DD/MM/YYYY (o fecha+hora si es trial)
+  const dateEnd = u.isTrial
+    ? new Intl.DateTimeFormat("es-BO", { dateStyle: "short", timeStyle: "short" }).format(end)
+    : formatDate(end);
+
+  const days = u.isTrial ? "1 hora" : `${total} días`;
+
+  // Obtener la contraseña (o placeholder si no está disponible)
+  let password = "Consultar con soporte";
+  try {
+    if (typeof availableClientPassword === "function") {
+      const pw = availableClientPassword(u);
+      if (pw && typeof pw === "string" && pw.trim()) password = pw.trim();
+    }
+  } catch (e) {}
+
+  // Si el nombre de la licencia ya incluye PRO/ULTRA/PLUS, no duplicar el sufijo
+  const licenseUpper = String(license).toUpperCase();
+  const licenseTitle = /PRO\b|ULTRA\b|PLUS\b/i.test(licenseUpper)
+    ? licenseUpper
+    : `${licenseUpper} PRO`;
+
+  const installUrl = "https://ultrashopfull.github.io/web/";
+  const whatsappUrl = "https://chat.whatsapp.com/GNfUe0vyrD46DNz6o2Ao1h?s=cl&p=a&iam=2";
+
+  return `💎 LICENCIA ${licenseTitle}
+
+📧 Usuario/correo: ${u.email || "—"}
+🔑 Contraseña: ${password}
+📅 Finaliza: ${dateEnd}
+⏳ Duración: ${days}
+
+📲 *INSTALACIÓN*
+
+1. Ingresa a: ${installUrl}
+2. Selecciona tu licencia e ingresa tus datos.
+3. Sigue el tutorial de instalación para tu dispositivo.
+
+💬 SOPORTE Y COMUNIDAD
+Únete a nuestro grupo de WhatsApp:
+${whatsappUrl}
+
+✅ ¡Gracias por tu compra! 🛍️`;
 }
+
 async function copyText(text) {
   try {
     if (navigator.clipboard && window.isSecureContext) {
