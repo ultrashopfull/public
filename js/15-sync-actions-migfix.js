@@ -44,11 +44,26 @@ window.panelSync = (() => {
       const meta=st.client_meta[String(s.id)]||{},master=masterById.get(String(s.cuenta_asignada_id||s.cuenta_maestra_id));
       const end=meta.endDate||(s.fecha_vencimiento?String(s.fecha_vencimiento).slice(0,10)+'T23:59:59':null);
       const active=!['cancelada','vencida'].includes(s.estado)&&(!meta.startDate||new Date(meta.startDate)<=new Date())&&(!end||new Date(end)>new Date());
+
+      // ✅ FIX: Detectar el dispositivo según el producto
+      const productKey = String(product).toLowerCase();
+      let deviceLabel = 'Pendiente';
+      if (productKey === 'gemini') {
+        deviceLabel = c.device_label_gemini || 'Pendiente';
+      } else if (productKey === 'chatgpt') {
+        deviceLabel = c.device_label_gpt || 'Pendiente';
+      } else {
+        // Para otros productos (capcut, claude, etc.) usar el genérico o el que esté disponible
+        deviceLabel = c.device_label || c.device_label_gpt || c.device_label_gemini || 'Pendiente';
+      }
+
       nextData[name].push({
         id:String(c.id),_clientId:c.id,_product:product,_subscriptionId:s.id,_masterId:master?._id||null,
         email:c.usuario||c.email||'',
         password: c.password_text || "",
-        phone:c.telefono||'',device:c.device_label||'Pendiente',status:['suspendido','cancelado'].includes(c.estado)?'Suspendido':active?'Activo':'Inactivo',
+        phone:c.telefono||'',
+        device: deviceLabel,
+        status:['suspendido','cancelado'].includes(c.estado)?'Suspendido':active?'Activo':'Inactivo',
         account:master?.number||0,total:s.dias_totales||30,left:end?Math.max(0,Math.ceil((Date.parse(end)-Date.now())/86400000)):0,
         creator:meta.creator||'admin',startDate:meta.startDate||null,endDate:end,isTrial:!!meta.isTrial,expiresAt:meta.isTrial?Date.parse(end):null,
         sessionClosed:c.estado==='suspendido',codexEnabled:!!c.codex_enabled
